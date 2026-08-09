@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f4f0e8">
-  <meta name="description" content="TailorFit：面向成年用户的本地优先训练计划工具，用四周计划、每日打卡和历史回顾，让训练更贴合自己的日常。">
+  <meta name="description" content="TailorFit：面向成年用户的本地优先训练计划工具，用四周计划、每日打卡、训练分析和历史回顾，让训练更贴合自己的日常。">
   <title>TailorFit — 让训练计划真正适合你</title>
   <style>
     :root {
@@ -462,7 +462,7 @@
           <dl class="fact-list" aria-label="TailorFit 产品事实">
             <div class="fact"><dt>计划周期</dt><dd>4 周</dd></div>
             <div class="fact"><dt>内置方案</dt><dd>6 套</dd></div>
-            <div class="fact"><dt>数据方式</dt><dd>本地优先</dd></div>
+            <div class="fact"><dt>分析范围</dt><dd>12 周</dd></div>
             <div class="fact"><dt>训练记录</dt><dd>每日打卡</dd></div>
           </dl>
         </aside>
@@ -477,7 +477,7 @@
         </div>
         <div class="intro-text">
           <p>很多训练计划看起来很完整，却没有回答最实际的问题：<em>今天为什么做这些？</em> TailorFit 从你的目标、训练场景、每周频率与每次时长出发，把四周拆成一天天能完成的动作。</p>
-          <p>你可以让 AI 根据自己的资料生成计划，也可以直接从本地计划库开始。选择哪一种方式，都不会把“开始训练”变成一项更复杂的任务。</p>
+          <p>你可以让 AI 根据自己的资料生成计划，也可以直接从本地计划库开始。训练仪表盘负责告诉你今天做什么，分析页负责帮你看见训练量、体重和动作表现的变化。</p>
         </div>
       </div>
     </section>
@@ -487,17 +487,19 @@
         <div class="section-heading reveal">
           <div>
             <p class="section-kicker eyebrow-light">02 / THE TOOLKIT</p>
-            <h2 id="features-heading">从生成计划，到真实完成。</h2>
+            <h2 id="features-heading">从生成计划，到看见变化。</h2>
           </div>
-          <p>每一个功能都围绕同一件事：让你更容易开始，也更容易回来看见自己的节奏。</p>
+          <p>每一个功能都围绕同一件事：让你更容易开始，也更容易根据真实记录调整下一步。</p>
         </div>
         <div class="feature-grid">
           <article class="feature-card reveal"><span class="feature-number">01</span><h3>AI 个性化计划</h3><p>输入目标、经验、器械和时间，让 DeepSeek 生成带有动作、组数、次数、休息、目标 RPE 与替代动作的四周计划。</p></article>
           <article class="feature-card reveal"><span class="feature-number">02</span><h3>六套内置方案</h3><p><strong>新手增肌、进阶增肌、减脂全身、居家自重、核心与体能、拉伸与活动度。</strong>无需 Token，打开就能用。</p></article>
           <article class="feature-card reveal"><span class="feature-number">03</span><h3>本地创建计划</h3><p>手动选择目标、训练环境、难度、重点与动作。不发送资料，不消耗 Token，把主动权留在自己手里。</p></article>
-          <article class="feature-card reveal"><span class="feature-number">04</span><h3>记录真实完成</h3><p>不只勾选“完成”。记录实际组数、次数、重量、RPE，也可以补充睡眠、心情、体重与训练备注。</p></article>
-          <article class="feature-card reveal"><span class="feature-number">05</span><h3>回看训练历史</h3><p>展开当天的动作详情与完成状态，查看体重趋势。计划结束后可以重新开始，历史记录继续保留。</p></article>
-          <article class="feature-card reveal"><span class="feature-number">06</span><h3>数据可以带走</h3><p>训练档案、计划与记录支持 JSON 导入导出。导出不包含 API Key，导入也不会覆盖当前设备的 Key。</p></article>
+          <article class="feature-card reveal"><span class="feature-number">04</span><h3>训练仪表盘</h3><p>用一周日期条、今日训练/恢复状态、本周训练天数、完成组数、平均 RPE 和进度条，快速知道自己现在在哪里。</p></article>
+          <article class="feature-card reveal"><span class="feature-number">05</span><h3>记录真实完成</h3><p>不只勾选“完成”。记录实际组数、次数、重量、RPE，也可以补充睡眠、心情、体重与训练备注。</p></article>
+          <article class="feature-card reveal"><span class="feature-number">06</span><h3>本地训练分析</h3><p>切换<strong>本周、4 周、12 周</strong>范围，查看训练天数、分钟、组数、平均 RPE、完成率、训练量、体重和动作表现。</p></article>
+          <article class="feature-card reveal"><span class="feature-number">07</span><h3>当前计划可调整</h3><p>可以只修改正在执行计划的组数和次数，不会改动计划库里的原计划，让安排随着真实状态变得更贴合。</p></article>
+          <article class="feature-card reveal"><span class="feature-number">08</span><h3>历史与数据可带走</h3><p>展开当天的动作详情与完成状态，查看历史记录和趋势；训练档案、计划与记录支持 JSON 导入导出，导出不包含 API Key。</p></article>
         </div>
       </div>
     </section>
@@ -515,7 +517,7 @@
           <article class="flow-step reveal"><span class="flow-number">01</span><h3>了解自己</h3><p>填写目标、训练经验、身体信息、时间与器械条件。</p></article>
           <article class="flow-step reveal"><span class="flow-number">02</span><h3>选择方式</h3><p>使用六套内置计划、本地手动创建，或授权 AI 生成专属方案。</p></article>
           <article class="flow-step reveal"><span class="flow-number">03</span><h3>完成训练</h3><p>按照当天动作记录真实完成情况，允许自己按状态调整。</p></article>
-          <article class="flow-step reveal"><span class="flow-number">04</span><h3>回看进步</h3><p>在历史里看见动作、状态、体重与连续训练的变化。</p></article>
+          <article class="flow-step reveal"><span class="flow-number">04</span><h3>分析变化</h3><p>在历史与分析页按本周、4 周或 12 周，看见训练量、体重和动作表现的变化。</p></article>
         </div>
       </div>
     </section>
