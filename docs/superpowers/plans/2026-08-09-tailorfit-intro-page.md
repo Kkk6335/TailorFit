@@ -29,7 +29,7 @@
 - Consumes: `C:/Users/Rz/Downloads/TailorFit体验版（8月16日前有效）.png`
 - Produces: a directly-openable page whose QR reference is `assets/tailorfit-experience-qr.png`.
 
-- [ ] **Step 1: Copy the supplied QR image into the project**
+- [x] **Step 1: Copy the supplied QR image into the project**
 
 Run:
 
@@ -39,7 +39,7 @@ Copy-Item -LiteralPath 'C:/Users/Rz/Downloads/TailorFit体验版（8月16日前�
 
 Expected: `assets/tailorfit-experience-qr.png` exists and has the same non-zero file size as the source.
 
-- [ ] **Step 2: Create the semantic HTML scaffold and accurate copy**
+- [x] **Step 2: Create the semantic HTML scaffold and accurate copy**
 
 Create `index.html` with these anchors and sections:
 
@@ -57,7 +57,7 @@ Create `index.html` with these anchors and sections:
 
 The page copy must name the six builtin plans, local creation, check-in fields, history/trend, JSON import/export, local API-key behavior, DeepSeek disclosure, and health disclaimer. The hero and footer must reference the QR image and say that the experience version is valid through August 16.
 
-- [ ] **Step 3: Commit the scaffold and asset**
+- [x] **Step 3: Commit the scaffold and asset**
 
 Run:
 
@@ -77,7 +77,7 @@ Expected: one commit containing only the page scaffold and local QR asset.
 - Consumes: semantic anchors from Task 1.
 - Produces: desktop and mobile layouts with keyboard-visible states, no horizontal overflow, and reduced-motion support.
 
-- [ ] **Step 1: Define the design tokens and base typography**
+- [x] **Step 1: Define the design tokens and base typography**
 
 Add CSS variables matching the approved direction:
 
@@ -95,15 +95,15 @@ Add CSS variables matching the approved direction:
 
 Use a system sans stack for UI/body copy and a serif fallback for feature headlines. Use `box-sizing: border-box`, no default shadows, `scroll-behavior: smooth`, visible focus outlines, and selection color from the clay token.
 
-- [ ] **Step 2: Build the desktop editorial composition**
+- [x] **Step 2: Build the desktop editorial composition**
 
 Implement a max-width `1180px` shell, sticky header, two-column hero, dark feature band, six-card feature grid, four-step process row, dark safety band, audience tags, and QR CTA footer. Keep cards square-edged and use borders, rules, labels, numbering, and typography for hierarchy.
 
-- [ ] **Step 3: Add mobile behavior and interaction states**
+- [x] **Step 3: Add mobile behavior and interaction states**
 
 At `max-width: 767px`, collapse columns and grids to one column, keep the QR card after the hero copy, allow header links to wrap or hide without overflow, and keep QR width at `min(100%, 220px)`. Add `@media (prefers-reduced-motion: reduce)` to remove transitions and reveal transforms.
 
-- [ ] **Step 4: Commit visual implementation**
+- [x] **Step 4: Commit visual implementation**
 
 Run:
 
@@ -123,11 +123,11 @@ Expected: the page is visually complete and responsive from a local file.
 - Consumes: existing sections and CTA anchors.
 - Produces: graceful reveal states, current year text, and a verified static artifact.
 
-- [ ] **Step 1: Add a minimal progressive-enhancement script**
+- [x] **Step 1: Add a minimal progressive-enhancement script**
 
 Use a script that only adds a `js` class, populates `[data-current-year]`, and reveals marked blocks through `IntersectionObserver` when available. When JavaScript is disabled, all content remains visible by default.
 
-- [ ] **Step 2: Run static structural checks**
+- [x] **Step 2: Run static structural checks**
 
 Run:
 
@@ -141,7 +141,7 @@ Write-Output 'Static checks passed'
 
 Expected: `Static checks passed`.
 
-- [ ] **Step 3: Check file paths, QR size, and Git diff**
+- [x] **Step 3: Check file paths, QR size, and Git diff**
 
 Run:
 
@@ -153,7 +153,7 @@ git status --short
 
 Expected: QR file is non-empty, diff check has no whitespace errors, and only intended project files are present.
 
-- [ ] **Step 4: Commit verification updates**
+- [x] **Step 4: Commit verification updates**
 
 Run:
 
