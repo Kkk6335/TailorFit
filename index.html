@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f0e8">
+  <meta name="description" content="TailorFit：面向成年用户的本地优先训练计划工具，用四周计划、每日打卡和历史回顾，让训练更贴合自己的日常。">
+  <title>TailorFit — 让训练计划真正适合你</title>
+  <style>
+    :root {
+      --paper: #f4f0e8;
+      --paper-deep: #e9e2d6;
+      --ink: #171716;
+      --slate: #2b2b28;
+      --slate-soft: #3a3a35;
+      --muted: #66645f;
+      --line: #cfc8bb;
+      --clay: #bd5b3e;
+      --clay-dark: #8f3f2c;
+      --white-ink: #f8f5ee;
+      --max-width: 1180px;
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --serif: Georgia, "Songti SC", "STSong", serif;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: var(--sans);
+      line-height: 1.6;
+      text-rendering: optimizeLegibility;
+    }
+
+    a { color: inherit; }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--clay);
+      outline-offset: 4px;
+    }
+
+    ::selection { color: var(--paper); background: var(--clay); }
+
+    .shell {
+      width: min(calc(100% - 48px), var(--max-width));
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: var(--clay-dark);
+      font: 700 11px/1.2 var(--mono);
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow-light { color: #e4ad96; }
+
+    .section-kicker {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font: 700 11px/1.2 var(--mono);
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    .section-kicker::before {
+      content: "";
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: currentColor;
+    }
+
+    .site-header {
+      position: sticky;
+      z-index: 10;
+      top: 0;
+      border-bottom: 1px solid var(--line);
+      background: rgba(244, 240, 232, .96);
+      backdrop-filter: blur(12px);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 72px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 10px;
+      font-weight: 800;
+      letter-spacing: -.04em;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      font-family: var(--serif);
+      font-size: 23px;
+      font-weight: 400;
+      letter-spacing: -.06em;
+    }
+
+    .brand-note {
+      color: var(--muted);
+      font: 11px var(--mono);
+      letter-spacing: .08em;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+    }
+
+    .nav a {
+      color: var(--muted);
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    .nav a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+
+    .nav-cta {
+      padding: 11px 15px;
+      border: 1px solid var(--ink);
+      color: var(--ink) !important;
+      font-weight: 700;
+    }
+
+    .nav-cta:hover { color: var(--paper) !important; background: var(--ink); text-decoration: none !important; }
+
+    .hero { padding: 96px 0 112px; }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, .9fr);
+      gap: clamp(48px, 9vw, 124px);
+      align-items: center;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 720px;
+      margin-bottom: 28px;
+      font-family: var(--serif);
+      font-size: clamp(52px, 7vw, 92px);
+      font-weight: 400;
+      letter-spacing: -.075em;
+      line-height: .98;
+    }
+
+    .hero-copy {
+      max-width: 590px;
+      color: var(--muted);
+      font-size: clamp(17px, 2vw, 20px);
+      line-height: 1.8;
+    }
+
+    .hero-copy strong { color: var(--ink); font-weight: 700; }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 18px;
+      border: 1px solid var(--ink);
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform 180ms ease, background-color 180ms ease, color 180ms ease;
+    }
+
+    .button:hover { transform: translateY(-2px); }
+
+    .button-primary {
+      border-color: var(--clay);
+      border-radius: 0 0 16px 16px;
+      color: #fff9f4;
+      background: var(--clay);
+    }
+
+    .button-primary:hover { background: var(--clay-dark); }
+
+    .button-secondary { background: transparent; }
+
+    .button-secondary:hover { color: var(--paper); background: var(--ink); }
+
+    .hero-aside { border-top: 1px solid var(--ink); }
+
+    .qr-card {
+      display: grid;
+      grid-template-columns: 174px minmax(0, 1fr);
+      gap: 24px;
+      align-items: center;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--ink);
+    }
+
+    .qr-frame {
+      display: grid;
+      place-items: center;
+      width: 174px;
+      aspect-ratio: 1;
+      padding: 10px;
+      border: 1px solid var(--ink);
+      background: #fff;
+    }
+
+    .qr-frame img { display: block; width: 100%; height: 100%; object-fit: contain; }
+
+    .qr-title { margin: 0 0 8px; font-size: 20px; letter-spacing: -.03em; }
+
+    .qr-copy { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+
+    .expiry {
+      display: inline-block;
+      margin-top: 14px;
+      padding-bottom: 2px;
+      border-bottom: 1px solid var(--clay);
+      color: var(--clay-dark);
+      font: 700 12px var(--mono);
+    }
+
+    .fact-list { display: grid; grid-template-columns: repeat(2, 1fr); margin: 0; }
+
+    .fact {
+      display: grid;
+      gap: 5px;
+      min-height: 102px;
+      padding: 17px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .fact:nth-child(odd) { padding-right: 18px; border-right: 1px solid var(--line); }
+    .fact:nth-child(even) { padding-left: 18px; }
+    .fact:nth-last-child(-n+2) { border-bottom: 0; }
+    .fact dt { color: var(--muted); font-size: 12px; }
+    .fact dd { margin: 0; font: 700 24px/1 var(--serif); }
+
+    .intro { padding: 104px 0 112px; border-top: 1px solid var(--line); }
+
+    .intro-grid {
+      display: grid;
+      grid-template-columns: .72fr 1.28fr;
+      gap: 72px;
+    }
+
+    .intro h2, .section-heading h2 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(38px, 5vw, 62px);
+      font-weight: 400;
+      letter-spacing: -.065em;
+      line-height: 1.03;
+    }
+
+    .intro-text { max-width: 690px; color: var(--muted); font-size: 20px; line-height: 1.8; }
+    .intro-text p:last-child { margin-bottom: 0; }
+    .intro-text em { color: var(--ink); font-style: normal; font-weight: 700; }
+
+    .dark-band {
+      color: var(--white-ink);
+      background: var(--slate);
+    }
+
+    .features { padding: 96px 0 104px; }
+
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 30px;
+      margin-bottom: 44px;
+    }
+
+    .section-heading h2 { max-width: 660px; }
+
+    .section-heading p {
+      max-width: 300px;
+      margin-bottom: 4px;
+      color: #c2c0b9;
+      font-size: 14px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid #62625b;
+      border-left: 1px solid #62625b;
+    }
+
+    .feature-card {
+      min-height: 252px;
+      padding: 25px;
+      border-right: 1px solid #62625b;
+      border-bottom: 1px solid #62625b;
+    }
+
+    .feature-number { color: #d9967f; font: 12px var(--mono); }
+    .feature-card h3 { margin: 47px 0 13px; font: 400 26px/1.1 var(--serif); letter-spacing: -.04em; }
+    .feature-card p { margin-bottom: 0; color: #c2c0b9; font-size: 14px; line-height: 1.75; }
+    .feature-card strong { color: var(--white-ink); font-weight: 700; }
+
+    .flow { padding: 104px 0 112px; }
+
+    .flow-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+    }
+
+    .flow-step { min-height: 236px; padding: 22px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .flow-number { color: var(--clay); font: 700 14px var(--mono); }
+    .flow-step h3 { margin: 58px 0 12px; font-size: 20px; letter-spacing: -.04em; }
+    .flow-step p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
+
+    .safety { padding: 92px 0 100px; }
+
+    .safety-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 84px; }
+    .safety h2 { margin: 0; font: 400 clamp(38px, 5vw, 58px)/1.03 var(--serif); letter-spacing: -.065em; }
+    .safety-copy { max-width: 650px; color: #c2c0b9; font-size: 16px; line-height: 1.85; }
+    .safety-copy p:last-child { margin-bottom: 0; }
+    .safety-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px 30px; margin: 36px 0 0; padding: 0; list-style: none; }
+    .safety-list li { padding-top: 12px; border-top: 1px solid #62625b; color: var(--white-ink); font-size: 14px; }
+    .safety-list span { display: block; margin-bottom: 7px; color: #d9967f; font: 11px var(--mono); }
+
+    .audience { padding: 104px 0 112px; }
+    .audience-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 72px; align-items: start; }
+    .audience h2 { margin: 0; font: 400 clamp(38px, 5vw, 58px)/1.03 var(--serif); letter-spacing: -.065em; }
+    .audience-copy { max-width: 650px; color: var(--muted); font-size: 18px; line-height: 1.8; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 30px; }
+    .tag { padding: 9px 12px; border: 1px solid var(--line); font-size: 13px; }
+
+    .cta-band { padding: 86px 0 90px; border-top: 1px solid #62625b; }
+    .cta-grid { display: grid; grid-template-columns: 1fr auto; gap: 70px; align-items: center; }
+    .cta-band h2 { max-width: 690px; margin: 0 0 16px; color: var(--white-ink); font: 400 clamp(38px, 5vw, 66px)/1 var(--serif); letter-spacing: -.07em; }
+    .cta-band p { max-width: 580px; margin-bottom: 0; color: #c2c0b9; font-size: 16px; }
+    .cta-qr { display: grid; justify-items: center; gap: 14px; }
+    .cta-qr .qr-frame { width: 190px; border-color: #a6a49c; }
+    .cta-qr small { color: #d9967f; font: 11px var(--mono); letter-spacing: .05em; }
+
+    footer { padding: 25px 0 38px; color: #a8a69e; background: var(--slate); font-size: 12px; }
+    .footer-inner { display: flex; justify-content: space-between; gap: 20px; border-top: 1px solid #62625b; padding-top: 18px; }
+    .footer-inner p { margin: 0; }
+
+    .reveal { transition: opacity 500ms ease, transform 500ms ease; }
+    .js .reveal { opacity: 0; transform: translateY(16px); }
+    .js .reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 767px) {
+      .shell { width: min(calc(100% - 32px), var(--max-width)); }
+      .site-header { position: relative; }
+      .header-inner { min-height: 64px; }
+      .brand-note, .nav a:not(.nav-cta) { display: none; }
+      .nav { gap: 0; }
+      .nav-cta { padding: 9px 11px; font-size: 12px; }
+      .hero { padding: 64px 0 72px; }
+      .hero-grid, .intro-grid, .safety-grid, .audience-grid, .cta-grid { grid-template-columns: 1fr; gap: 40px; }
+      h1 { margin-bottom: 22px; font-size: clamp(50px, 16vw, 72px); }
+      .hero-copy { font-size: 16px; }
+      .hero-actions { margin-top: 26px; }
+      .button { width: 100%; }
+      .qr-card { grid-template-columns: 1fr; gap: 18px; }
+      .qr-frame { width: min(100%, 220px); }
+      .intro, .flow, .audience { padding: 72px 0 78px; }
+      .intro-text { font-size: 17px; }
+      .section-heading { display: block; margin-bottom: 30px; }
+      .section-heading p { margin-top: 22px; }
+      .features, .safety { padding: 72px 0 78px; }
+      .feature-grid, .flow-grid { grid-template-columns: 1fr; }
+      .feature-card { min-height: 0; padding: 22px; }
+      .feature-card h3 { margin-top: 34px; }
+      .flow-step { min-height: 0; padding: 22px; }
+      .flow-step h3 { margin-top: 34px; }
+      .safety-list { grid-template-columns: 1fr; }
+      .audience-copy { font-size: 17px; }
+      .cta-band { padding: 70px 0 76px; }
+      .cta-grid { gap: 35px; }
+      .cta-qr { justify-items: start; }
+      .footer-inner { display: block; }
+      .footer-inner p + p { margin-top: 8px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      .js .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="top">
+    <div class="shell header-inner">
+      <a class="brand" href="#intro" aria-label="TailorFit 首页">
+        <span class="brand-mark">TailorFit</span>
+        <span class="brand-note">TRAIN WITH INTENTION</span>
+      </a>
+      <nav class="nav" aria-label="页面导航">
+        <a href="#features">功能</a>
+        <a href="#flow">流程</a>
+        <a href="#safety">安全</a>
+        <a class="nav-cta" href="#experience">扫码体验</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="intro">
+      <div class="shell hero-grid">
+        <div class="reveal">
+          <p class="eyebrow">A PERSONAL TRAINING PRACTICE</p>
+          <h1>把训练计划，变成真正适合你的日常。</h1>
+          <p class="hero-copy">TailorFit 把你的目标、训练经验、器械、时间和身体信息，整理成一份可以执行的 <strong>四周训练计划</strong>。不追求更复杂，只让下一次训练更清楚。</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#experience">扫码体验 TailorFit</a>
+            <a class="button button-secondary" href="#features">先看看它能做什么</a>
+          </div>
+        </div>
+
+        <aside class="hero-aside reveal" aria-label="TailorFit 体验入口">
+          <div class="qr-card">
+            <div class="qr-frame">
+              <img src="assets/tailorfit-experience-qr.png" alt="TailorFit 体验版小程序二维码，扫码打开体验">
+            </div>
+            <div>
+              <h2 class="qr-title">先从一份计划开始。</h2>
+              <p class="qr-copy">使用微信扫描二维码，打开 TailorFit 体验版。你也可以先使用内置计划，不必配置 API Key。</p>
+              <span class="expiry">体验版有效期至 8 月 16 日</span>
+            </div>
+          </div>
+          <dl class="fact-list" aria-label="TailorFit 产品事实">
+            <div class="fact"><dt>计划周期</dt><dd>4 周</dd></div>
+            <div class="fact"><dt>内置方案</dt><dd>6 套</dd></div>
+            <div class="fact"><dt>数据方式</dt><dd>本地优先</dd></div>
+            <div class="fact"><dt>训练记录</dt><dd>每日打卡</dd></div>
+          </dl>
+        </aside>
+      </div>
+    </section>
+
+    <section class="intro" aria-labelledby="intro-heading">
+      <div class="shell intro-grid reveal">
+        <div>
+          <p class="section-kicker">01 / THE IDEA</p>
+          <h2 id="intro-heading">不是一张通用清单，是你的下一步。</h2>
+        </div>
+        <div class="intro-text">
+          <p>很多训练计划看起来很完整，却没有回答最实际的问题：<em>今天为什么做这些？</em> TailorFit 从你的目标、训练场景、每周频率与每次时长出发，把四周拆成一天天能完成的动作。</p>
+          <p>你可以让 AI 根据自己的资料生成计划，也可以直接从本地计划库开始。选择哪一种方式，都不会把“开始训练”变成一项更复杂的任务。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="dark-band features" id="features" aria-labelledby="features-heading">
+      <div class="shell">
+        <div class="section-heading reveal">
+          <div>
+            <p class="section-kicker eyebrow-light">02 / THE TOOLKIT</p>
+            <h2 id="features-heading">从生成计划，到真实完成。</h2>
+          </div>
+          <p>每一个功能都围绕同一件事：让你更容易开始，也更容易回来看见自己的节奏。</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card reveal"><span class="feature-number">01</span><h3>AI 个性化计划</h3><p>输入目标、经验、器械和时间，让 DeepSeek 生成带有动作、组数、次数、休息、目标 RPE 与替代动作的四周计划。</p></article>
+          <article class="feature-card reveal"><span class="feature-number">02</span><h3>六套内置方案</h3><p><strong>新手增肌、进阶增肌、减脂全身、居家自重、核心与体能、拉伸与活动度。</strong>无需 Token，打开就能用。</p></article>
+          <article class="feature-card reveal"><span class="feature-number">03</span><h3>本地创建计划</h3><p>手动选择目标、训练环境、难度、重点与动作。不发送资料，不消耗 Token，把主动权留在自己手里。</p></article>
+          <article class="feature-card reveal"><span class="feature-number">04</span><h3>记录真实完成</h3><p>不只勾选“完成”。记录实际组数、次数、重量、RPE，也可以补充睡眠、心情、体重与训练备注。</p></article>
+          <article class="feature-card reveal"><span class="feature-number">05</span><h3>回看训练历史</h3><p>展开当天的动作详情与完成状态，查看体重趋势。计划结束后可以重新开始，历史记录继续保留。</p></article>
+          <article class="feature-card reveal"><span class="feature-number">06</span><h3>数据可以带走</h3><p>训练档案、计划与记录支持 JSON 导入导出。导出不包含 API Key，导入也不会覆盖当前设备的 Key。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="flow" id="flow" aria-labelledby="flow-heading">
+      <div class="shell">
+        <div class="section-heading reveal">
+          <div>
+            <p class="section-kicker">03 / THE ROUTINE</p>
+            <h2 id="flow-heading">四步，回到自己的节奏。</h2>
+          </div>
+          <p>从认识自己开始，不需要一次性把所有事情做得完美。</p>
+        </div>
+        <div class="flow-grid">
+          <article class="flow-step reveal"><span class="flow-number">01</span><h3>了解自己</h3><p>填写目标、训练经验、身体信息、时间与器械条件。</p></article>
+          <article class="flow-step reveal"><span class="flow-number">02</span><h3>选择方式</h3><p>使用六套内置计划、本地手动创建，或授权 AI 生成专属方案。</p></article>
+          <article class="flow-step reveal"><span class="flow-number">03</span><h3>完成训练</h3><p>按照当天动作记录真实完成情况，允许自己按状态调整。</p></article>
+          <article class="flow-step reveal"><span class="flow-number">04</span><h3>回看进步</h3><p>在历史里看见动作、状态、体重与连续训练的变化。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="dark-band safety" id="safety" aria-labelledby="safety-heading">
+      <div class="shell safety-grid">
+        <div class="reveal">
+          <p class="section-kicker eyebrow-light">04 / LOCAL FIRST</p>
+          <h2 id="safety-heading">透明地使用 AI，安心地保留数据。</h2>
+        </div>
+        <div class="safety-copy reveal">
+          <p>TailorFit 没有自己的后端。API Key、训练档案、计划和历史记录默认只保存在当前微信客户端；只有在你选择 AI 生成计划时，相关训练与健康信息才会直接发送给 DeepSeek。</p>
+          <p>TailorFit 只提供一般健身参考，不提供医疗诊断、治疗建议、营养处方或训练效果承诺。存在疾病、持续疼痛、孕期、术后恢复或严重疾病等情况时，请先咨询专业人士。</p>
+          <ul class="safety-list">
+            <li><span>KEY</span>API Key 不进入导出文件</li>
+            <li><span>DATA</span>本地数据可导出与恢复</li>
+            <li><span>CHOICE</span>本地计划无需 Token</li>
+            <li><span>BOUNDARY</span>AI 不是医疗建议</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="audience" id="audience" aria-labelledby="audience-heading">
+      <div class="shell audience-grid">
+        <div class="reveal">
+          <p class="section-kicker">05 / WHO IT'S FOR</p>
+          <h2 id="audience-heading">给想认真开始的人。</h2>
+        </div>
+        <div class="audience-copy reveal">
+          <p>如果你不想再对着一堆动作随意选择，却也不需要一个复杂的健身管理系统，TailorFit 可以从今天这一小步开始。</p>
+          <div class="tag-list" aria-label="适合人群">
+            <span class="tag">第一次建立训练习惯</span>
+            <span class="tag">想重新开始训练</span>
+            <span class="tag">居家徒手训练</span>
+            <span class="tag">有目标但缺计划</span>
+            <span class="tag">希望看见长期记录</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <section class="dark-band cta-band" id="experience" aria-labelledby="experience-heading">
+    <div class="shell cta-grid">
+      <div class="reveal">
+        <p class="section-kicker eyebrow-light">START WITH TODAY</p>
+        <h2 id="experience-heading">你的下一次训练，可以从这里开始。</h2>
+        <p>打开微信，扫描右侧二维码，体验 TailorFit。体验版二维码在 8 月 16 日前有效。</p>
+      </div>
+      <div class="cta-qr reveal">
+        <div class="qr-frame">
+          <img src="assets/tailorfit-experience-qr.png" alt="TailorFit 体验版小程序二维码，扫码打开体验">
+        </div>
+        <small>SCAN TO EXPERIENCE / 8.16 前有效</small>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="shell footer-inner">
+      <p>TailorFit / 为你的训练留一份清楚的计划。</p>
+      <p>体验版二维码有效期至 8 月 16 日 · <span data-current-year>2026</span></p>
+    </div>
+  </footer>
+
+  <script>
+    document.documentElement.classList.add('js');
+    document.querySelectorAll('[data-current-year]').forEach((node) => {
+      node.textContent = new Date().getFullYear();
+    });
+
+    const reveals = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const observer = new IntersectionObserver((entries, currentObserver) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-visible');
+          currentObserver.unobserve(entry.target);
+        });
+      }, { threshold: 0.12 });
+      reveals.forEach((node) => observer.observe(node));
+    } else {
+      reveals.forEach((node) => node.classList.add('is-visible'));
+    }
+  </script>
+</body>
+</html>
