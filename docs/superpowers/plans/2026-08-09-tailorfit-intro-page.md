@@ -55,7 +55,7 @@ Create `index.html` with these anchors and sections:
 <footer id="experience">...</footer>
 ```
 
-The page copy must name the six builtin plans, local creation, check-in fields, history/trend, JSON import/export, local API-key behavior, DeepSeek disclosure, and health disclaimer. The hero and footer must reference the QR image and say that the experience version is valid through August 16.
+The page copy must name the six builtin plans, local creation, dashboard, check-in fields, history/trend, plan adjustment, JSON import/export, local API-key behavior, DeepSeek disclosure, and health disclaimer. The hero and footer must reference the QR image and say that the experience version is valid through August 16.
 
 - [x] **Step 3: Commit the scaffold and asset**
 
@@ -97,7 +97,7 @@ Use a system sans stack for UI/body copy and a serif fallback for feature headli
 
 - [x] **Step 2: Build the desktop editorial composition**
 
-Implement a max-width `1180px` shell, sticky header, two-column hero, dark feature band, six-card feature grid, four-step process row, dark safety band, audience tags, and QR CTA footer. Keep cards square-edged and use borders, rules, labels, numbering, and typography for hierarchy.
+Implement a max-width `1180px` shell, sticky header, two-column hero, dark feature band, eight-card feature grid, four-step process row, dark safety band, audience tags, and QR CTA footer. Keep cards square-edged and use borders, rules, labels, numbering, and typography for hierarchy.
 
 - [x] **Step 3: Add mobile behavior and interaction states**
 
