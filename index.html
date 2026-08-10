@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#f4f0e8">
   <meta name="description" content="TailorFit：面向成年用户的本地优先训练计划工具，用四周计划、每日打卡、训练分析和历史回顾，让训练更贴合自己的日常。">
   <title>TailorFit — 让训练计划真正适合你</title>
+  <script>document.documentElement.classList.add('js');</script>
   <style>
     :root {
       --paper: #f4f0e8;
@@ -171,7 +172,7 @@
       color: var(--muted);
       font-size: clamp(17px, 2vw, 20px);
       line-height: 1.8;
-      word-break: break-all;
+      overflow-wrap: anywhere;
     }
 
     .mobile-copy, .mobile-only-break { display: none; }
@@ -372,8 +373,8 @@
     .footer-inner p { margin: 0; }
 
     .reveal { transition: opacity 500ms ease, transform 500ms ease; }
-    .js .reveal { opacity: 0; transform: translateY(16px); }
-    .js .reveal.is-visible { opacity: 1; transform: translateY(0); }
+    .js .reveal { opacity: 0; visibility: hidden; transform: translateY(16px); }
+    .js .reveal.is-visible { opacity: 1; visibility: visible; transform: translateY(0); }
 
     @media (max-width: 767px) {
       .shell { width: min(calc(100% - 32px), var(--max-width)); }
@@ -384,11 +385,11 @@
       .nav-cta { padding: 9px 11px; font-size: 12px; }
       .hero { padding: 64px 0 72px; }
       .hero-grid, .intro-grid, .safety-grid, .audience-grid, .cta-grid { grid-template-columns: 1fr; gap: 40px; }
-      h1 { max-width: 100%; margin-bottom: 22px; font-size: clamp(36px, 10.5vw, 42px); word-break: break-all; }
+      h1 { max-width: 100%; margin-bottom: 22px; font-size: clamp(36px, 10.5vw, 42px); }
       .desktop-copy { display: none; }
       .mobile-only-break { display: block; }
       .mobile-copy { display: inline; }
-      .hero-copy { max-width: 100%; font-size: 14px; word-break: break-all; }
+      .hero-copy { max-width: 100%; font-size: 14px; }
       .hero-actions { margin-top: 26px; }
       .button { width: 100%; }
       .qr-card { grid-template-columns: 1fr; gap: 18px; }
@@ -415,7 +416,7 @@
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
-      .js .reveal { opacity: 1; transform: none; }
+      .js .reveal { opacity: 1; visibility: visible; transform: none; }
     }
   </style>
 </head>
@@ -585,7 +586,6 @@
   </footer>
 
   <script>
-    document.documentElement.classList.add('js');
     document.querySelectorAll('[data-current-year]').forEach((node) => {
       node.textContent = new Date().getFullYear();
     });
