@@ -44,6 +44,72 @@ TailorFit 是一款微信小程序，帮助用户将目标、训练经验、器�
 
 Claude 研究札记风格：暖象牙纸色背景（`#f4f0e8`）+ 近黑石板色（`#2b2b28`）+ 陶土橙强调（`#bd5b3e`），硬边无阴影，无渐变。
 
+## 设计系统
+
+### 颜色
+
+| 角色 | Token | 色值 | 用途 |
+| --- | --- | --- | --- |
+| 背景 | `--paper` | #f4f0e8 | 页面主背景 |
+| 深色背景 | `--slate` | #2b2b28 | 功能/安全/CTA 区块 |
+| 正文 | `--ink` | #171716 | 主要文字 |
+| 次要文字 | `--muted` | #66645f | 辅助说明 |
+| 分隔线 | `--line` | #cfc8bb | 边框、分割线 |
+| 强调 | `--clay` | #bd5b3e | CTA、编号、重点 |
+| 深色区块文字 | `--white-ink` | #f8f5ee | 深色背景上的正文 |
+
+### 字体
+
+- 正文/UI：系统无衬线栈（`-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif`）
+- 标题/品牌：Georgia 系衬线（`Georgia, "Songti SC", "STSong", serif`）
+- 标签/编号：等宽字体（`Consolas, "Liberation Mono", monospace`）
+
+### 间距与宽度
+
+- 内容最大宽度：`1180px`（`--max-width`）
+- 响应式断点：`767px`（移动端单列）
+
+## 可访问性实现
+
+遵循 WCAG 2.2 AA 标准：
+
+- 所有交互元素有可见 `:focus-visible` 状态（2px 陶土橙外轮廓）
+- 所有图片有描述性 `alt` 文本
+- 语义化 HTML（`<header>`, `<main>`, `<section>`, `<nav>`, `<footer>`, `<article>`）
+- 所有锚点链接有 `aria-label` 或可感知文本
+- 尊重 `prefers-reduced-motion: reduce`：禁用滚动动画和过渡
+- 关键内容不依赖 JavaScript 呈现（渐进增强）
+
+## 关键代码模式
+
+### 年份自动更新
+
+```html
+<span data-current-year>2026</span>
+```
+```js
+document.querySelectorAll('[data-current-year]').forEach((node) => {
+  node.textContent = new Date().getFullYear();
+});
+```
+
+### 滚动入场动画（IntersectionObserver）
+
+```css
+.reveal { transition: opacity 500ms ease, transform 500ms ease; }
+.js .reveal { opacity: 0; visibility: hidden; transform: translateY(16px); }
+.js .reveal.is-visible { opacity: 1; visibility: visible; transform: translateY(0); }
+```
+- threshold: `0.12`（元素 12% 可见时触发）
+- `prefers-reduced-motion: reduce` 时自动跳过动画
+
+### JS 渐进增强检测
+
+首行内嵌脚本添加 `.js` class，CSS 据此控制增强行为：
+```html
+<script>document.documentElement.classList.add('js');</script>
+```
+
 ## 快速开始
 
 ### 本地预览
@@ -79,9 +145,10 @@ Write-Output 'Static checks passed'
 ├── assets/
 │   └── tailorfit-experience-qr.png  # 体验版二维码图片
 ├── docs/
-│   └── superpowers/
-│       ├── plans/              # 开发计划文档
-│       └── specs/              # 设计规格文档
+│   ├── superpowers/
+│   │   ├── plans/              # 开发计划文档
+│   │   └── specs/              # 设计规格文档
+│   └── ai-log/                 # AI 开发日志（YYYY-MM-DD.md）
 ├── AGENTS.md                   # AI 开发规范与项目知识库
 └── README.md                   # 本文件
 ```
@@ -91,6 +158,7 @@ Write-Output 'Static checks passed'
 - **`index.html`** — 全部内容在此一个文件中，CSS 与 JS 均为内嵌，不依赖任何外部资源。
 - **`assets/tailorfit-experience-qr.png`** — 体验版小程序二维码，本地副本保证离线可用。
 - **`docs/superpowers/`** — 开发过程文档，非运行时依赖。
+- **`docs/ai-log/`** — AI 开发日志，每次任务完成后写入。
 - **`AGENTS.md`** — 供 AI 参与开发时阅读，包含硬规则、设计决策和知识沉淀。
 
 ## 当前限制
