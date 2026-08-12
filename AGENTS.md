@@ -75,9 +75,8 @@
 
 ```powershell
 $html = Get-Content -Raw 'index.html'
-@('id="intro"','id="features"','id="flow"','id="safety"','id="audience"','id="experience"','assets/tailorfit-experience-qr.png','prefers-reduced-motion','aria-label','alt=') | ForEach-Object { if ($html -notmatch [regex]::Escape($_)) { throw "Missing: $_" } }
+@('id="intro"','id="features"','id="flow"','id="safety"','id="audience"','id="experience"','assets/tailorfit-experience-qr.png','prefers-reduced-motion','aria-label','alt=','class="glass','LiquidGlass.init()','glass-render') | ForEach-Object { if ($html -notmatch [regex]::Escape($_)) { throw "Missing: $_" } }
 if ($html -match '[Tt][Oo][Dd][Oo]|[Tt][Bb][Dd]|[Ll]orem ipsum') { throw 'Placeholder copy found' }
-if ($html -match 'box-shadow|radial-gradient|linear-gradient') { throw 'Disallowed visual primitive found' }
 Write-Output 'Static checks passed'
 ```
 
@@ -188,6 +187,7 @@ Write-Output 'Static checks passed'
 - 安全与隐私说明（本地优先、API Key 保护、AI 非医疗建议）
 - 适用人群标签（5 类人群标签）
 - 滚动入场动画（IntersectionObserver，尊重 `prefers-reduced-motion`）
+- Liquid Glass 液态玻璃导航材质（顶栏 / 导航胶囊 / CTA 按钮：WebGL 折射 + CSS 多层玻璃，自动明暗适配与按压形变）
 - WCAG 2.2 AA 可访问性（焦点状态、alt 文本、语义化 HTML）
 
 ### 当前限制
@@ -196,14 +196,29 @@ Write-Output 'Static checks passed'
 - 页面文案需随小程序功能迭代手动同步，无自动生成机制。
 - 无分析/埋点，无法追踪页面访问数据。
 - 二维码图片需保持本地路径，不可外链。
+- WebGL 折射为渐进增强：无 WebGL、SVG 快照渲染失败或快照内容校验失败时自动回退为 CSS 多层玻璃材质（无折射位移）。
 
 ### Known Pitfalls
 
 ```md
-#### [视觉] 禁用渐变与阴影
-- 触发条件：添加卡片悬浮效果或按钮背景时。
-- 必须做法：严格禁止使用 `box-shadow`、`radial-gradient`、`linear-gradient`；使用边框、底色和文字颜色表达层级。
-- 路径/验证：静态检查脚本中的 `box-shadow|radial-gradient|linear-gradient` 匹配项。
+#### [视觉] Liquid Glass 只作用于导航控件层
+- 触发条件：给内容卡片、标签或正文添加玻璃效果时。
+- 必须做法：`.glass` 材质只用于导航栏、导航胶囊、按钮等交互控件；内容层保持干净底色，避免全页玻璃化。
+- 路径/验证：`index.html` 中 `.glass` 类只出现在 `site-header`、`.nav a`、`.button` 上。
+```
+
+```md
+#### [视觉] CSS 层申明顺序覆盖 sticky 定位
+- 触发条件：新增 `.glass` 材质或调整 `.site-header` 定位时。
+- 必须做法：`.glass` 的 `position: relative; z-index: 5` 会覆盖 `.site-header` 的 `position: sticky`，须保留 `.site-header.glass { position: sticky; z-index: 50; }` 复权规则。
+- 路径/验证：`index.html` 中 `.site-header.glass` 规则、`glass-render` canvas 的 z-index。
+```
+
+```md
+#### [视觉] 阴影与渐变限用于玻璃材质
+- 触发条件：添加卡片悬浮效果或普通内容阴影时。
+- 必须做法：`box-shadow` / 渐变仅用于 `.glass` 材质层与实色玻璃按钮（inset 高光、Fresnel、双层投射阴影）；内容卡片、正文禁止使用。
+- 路径/验证：`index.html` 中 `box-shadow` 与 `--glass-*` 变量定义处。
 ```
 
 ```md
@@ -228,11 +243,11 @@ Write-Output 'Static checks passed'
 - 约束：后续功能变更均编辑同一文件；新增文件需有明确理由。
 - 路径/验证：`index.html` 全文件；无外部 CSS/JS 依赖。
 
-#### Claude 编辑风格视觉约束
-- 决策：暖象牙纸色（`#f4f0e8`）+ 近黑石板色（`#2b2b28`）+ 陶土橙强调（`#bd5b3e`），硬边无阴影，无渐变。
-- 原因：与 TailorFit "训练留一份清楚计划"理念一致，克制专业。
-- 约束：禁止使用 `box-shadow`、`radial-gradient`、`linear-gradient`。
-- 路径/验证：`index.html` CSS 变量定义区及静态检查脚本。
+#### Claude 编辑风格视觉约束（Liquid Glass 版）
+- 决策：暖象牙纸色（`#f4f0e8`）+ 近黑石板色（`#2b2b28`）+ 陶土橙强调（`#bd5b3e`）为基础设计语言；导航控件层采用 Apple Liquid Glass 液态玻璃材质（2025-08 视觉改版授权）。
+- 原因：与 TailorFit "训练留一份清楚计划"理念一致，克制专业；玻璃材质只赋予导航控件，内容层保持干净底色。
+- 约束：`box-shadow` / 渐变（`linear-gradient`、`radial-gradient`）仅允许用于 `.glass` 材质层与实色玻璃按钮（inset 高光、Fresnel 内圈、双层投射阴影），禁止用于内容卡片、正文与标签；玻璃控件必须带 `.glass` 类以参与 WebGL 折射层绘制。
+- 路径/验证：`index.html` 中 `--glass-*` 变量、`.glass` 规则区与静态检查脚本。
 
 #### IntersectionObserver 渐进增强
 - 决策：使用 `IntersectionObserver` 实现滚动入场动画，无 JS 时所有内容可见。

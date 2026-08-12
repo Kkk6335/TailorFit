@@ -28,6 +28,7 @@ TailorFit 是一款微信小程序，帮助用户将目标、训练经验、器�
 - 安全与隐私说明（本地优先、AI 非医疗建议）
 - 适用人群标签
 - 滚动入场动画（尊重 `prefers-reduced-motion`）
+- Liquid Glass 液态玻璃导航材质（顶栏 / 导航胶囊 / CTA 按钮：WebGL 折射 + CSS 多层玻璃，自动明暗适配与按压形变）
 - WCAG 2.2 AA 可访问性：焦点状态可见、图片有 alt 文本、语义化 HTML
 
 ## 技术栈
@@ -35,14 +36,14 @@ TailorFit 是一款微信小程序，帮助用户将目标、训练经验、器�
 | 层       | 技术                                         |
 | -------- | -------------------------------------------- |
 | 前端     | HTML5 + CSS3（自定义属性 / Grid / Flexbox）  |
-| 脚本     | Vanilla JavaScript（IntersectionObserver）   |
+| 脚本     | Vanilla JavaScript（IntersectionObserver、WebGL 折射 shader） |
 | 后端     | 无                                           |
 | 构建     | 无                                           |
 | 部署     | 任意静态托管服务或直接双击打开               |
 
 ## 视觉风格
 
-Claude 研究札记风格：暖象牙纸色背景（`#f4f0e8`）+ 近黑石板色（`#2b2b28`）+ 陶土橙强调（`#bd5b3e`），硬边无阴影，无渐变。
+暖象牙纸色背景（`#f4f0e8`）+ 近黑石板色（`#2b2b28`）+ 陶土橙强调（`#bd5b3e`）基础设计语言。导航控件层（顶栏、导航胶囊、CTA 按钮）采用 Liquid Glass 液态玻璃材质：WebGL 折射 shader + CSS 多层玻璃（环境 tint、Fresnel 边缘光、双层克制阴影、按压液态形变、滚动明暗自适应）；内容层保持干净底色。无 WebGL 或快照失败时自动回退为 CSS 多层玻璃。
 
 ## 设计系统
 
@@ -131,9 +132,8 @@ xdg-open index.html
 
 ```powershell
 $html = Get-Content -Raw 'index.html'
-@('id="intro"','id="features"','id="flow"','id="safety"','id="audience"','id="experience"','assets/tailorfit-experience-qr.png','prefers-reduced-motion','aria-label','alt=') | ForEach-Object { if ($html -notmatch [regex]::Escape($_)) { throw "Missing: $_" } }
+@('id="intro"','id="features"','id="flow"','id="safety"','id="audience"','id="experience"','assets/tailorfit-experience-qr.png','prefers-reduced-motion','aria-label','alt=','class="glass','LiquidGlass.init()','glass-render') | ForEach-Object { if ($html -notmatch [regex]::Escape($_)) { throw "Missing: $_" } }
 if ($html -match '[Tt][Oo][Dd][Oo]|[Tt][Bb][Dd]|[Ll]orem ipsum') { throw 'Placeholder copy found' }
-if ($html -match 'box-shadow|radial-gradient|linear-gradient') { throw 'Disallowed visual primitive found' }
 Write-Output 'Static checks passed'
 ```
 
@@ -167,6 +167,7 @@ Write-Output 'Static checks passed'
 - 页面文案需随小程序功能迭代手动同步，无自动生成机制。
 - 无分析/埋点，无法追踪页面访问数据。
 - 二维码图片需保持本地路径，不可外链。
+- WebGL 折射为渐进增强：无 WebGL、SVG 快照渲染失败或快照内容校验失败时自动回退为 CSS 多层玻璃材质（无折射位移）。
 
 ## 部署
 

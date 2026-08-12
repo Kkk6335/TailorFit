@@ -23,6 +23,15 @@
       --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
       --serif: Georgia, "Songti SC", "STSong", serif;
       --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      --glass-blur: 5px;
+      --glass-sat: 1.22;
+      --glass-tint: rgba(250, 248, 242, .13);
+      --glass-tint-strong: rgba(250, 248, 242, .30);
+      --glass-refl: rgba(255, 255, 255, .16);
+      --glass-refl-dark: rgba(23, 23, 22, .05);
+      --glass-inset-line: rgba(255, 255, 255, .08);
+      --glass-shadow-near: 0 1px 1px rgba(23, 23, 22, .06);
+      --glass-shadow-far: 0 12px 30px rgba(23, 23, 22, .11);
     }
 
     * { box-sizing: border-box; }
@@ -84,12 +93,24 @@
 
     .site-header {
       position: sticky;
-      z-index: 10;
+      z-index: 50;
       top: 0;
-      border-bottom: 1px solid var(--line);
-      background: rgba(244, 240, 232, .96);
-      backdrop-filter: blur(12px);
+      border-bottom: 0;
+      --glass-tint: rgba(250, 248, 242, .11);
     }
+
+    .site-header.is-scrolled::before { background-color: var(--glass-tint-strong); }
+
+    .site-header.tone-dark { color: var(--white-ink); }
+    .site-header.tone-dark::before {
+      background: rgba(22, 22, 20, .44);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .20),
+        inset 0 -1px 0 rgba(0, 0, 0, .18),
+        inset 0 1px 0 rgba(0, 0, 0, .20);
+    }
+    .site-header.tone-dark::after { box-shadow: 0 1px 0 rgba(0, 0, 0, .10); }
+    .site-header.tone-dark .brand-note { color: #b5b2a9; }
 
     .header-inner {
       display: flex;
@@ -123,25 +144,56 @@
     .nav {
       display: flex;
       align-items: center;
-      gap: 26px;
+      gap: 10px;
     }
 
     .nav a {
+      display: inline-block;
+      padding: 9px 15px;
+      border-radius: 999px;
       color: var(--muted);
       font-size: 13px;
       text-decoration: none;
     }
 
-    .nav a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
-
-    .nav-cta {
-      padding: 11px 15px;
-      border: 1px solid var(--ink);
-      color: var(--ink) !important;
-      font-weight: 700;
+    .nav a:hover {
+      color: var(--ink);
+      text-decoration: none;
+      background-color: rgba(23, 23, 22, .07);
     }
 
-    .nav-cta:hover { color: var(--paper) !important; background: var(--ink); text-decoration: none !important; }
+    .nav a:active { transition-duration: 110ms; }
+
+    .site-header.tone-dark .nav a { color: #d8d5cd; }
+    .site-header.tone-dark .nav a:hover { color: var(--white-ink); background-color: rgba(255, 255, 255, .12); }
+
+    .nav-cta {
+      padding: 11px 18px;
+      border-color: transparent;
+      color: #fff9f4 !important;
+      font-weight: 700;
+      background: var(--clay);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .26),
+        inset 0 0 0 1px rgba(255, 255, 255, .10),
+        0 1px 1px rgba(143, 63, 44, .12),
+        0 10px 24px rgba(143, 63, 44, .28);
+    }
+
+    .nav-cta:hover {
+      color: #fff9f4 !important;
+      text-decoration: none !important;
+      background: var(--clay-dark);
+    }
+
+    .nav-cta.is-pressed {
+      transform: scale(1.035, .965);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .14),
+        inset 0 0 0 1px rgba(255, 255, 255, .10),
+        0 1px 1px rgba(143, 63, 44, .10),
+        0 5px 14px rgba(143, 63, 44, .22);
+    }
 
     .hero { padding: 96px 0 112px; }
 
@@ -187,32 +239,135 @@
     }
 
     .button {
+      position: relative;
+      z-index: 5;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       min-height: 48px;
-      padding: 12px 18px;
-      border: 1px solid var(--ink);
+      padding: 12px 22px;
+      border: 0;
+      border-radius: 999px;
       font-size: 13px;
       font-weight: 800;
       text-decoration: none;
-      transition: transform 180ms ease, background-color 180ms ease, color 180ms ease;
+      transition:
+        transform 430ms cubic-bezier(.34, 1.56, .64, 1),
+        background-color 180ms ease,
+        box-shadow 340ms cubic-bezier(.34, 1.56, .64, 1);
     }
 
     .button:hover { transform: translateY(-2px); }
 
     .button-primary {
-      border-color: var(--clay);
-      border-radius: 0 0 16px 16px;
       color: #fff9f4;
       background: var(--clay);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .28),
+        inset 0 -1px 0 rgba(0, 0, 0, .14),
+        inset 0 0 0 1px rgba(255, 255, 255, .10),
+        var(--glass-shadow-near),
+        0 14px 32px rgba(143, 63, 44, .30);
     }
 
     .button-primary:hover { background: var(--clay-dark); }
 
     .button-secondary { background: transparent; }
 
-    .button-secondary:hover { color: var(--paper); background: var(--ink); }
+    .button-secondary:hover {
+      color: var(--ink);
+      background: rgba(23, 23, 22, .06);
+    }
+
+    .button.is-pressed {
+      transform: scale(1.035, .965) translateY(-1px);
+      transition:
+        transform 130ms cubic-bezier(.35, .9, .5, 1),
+        background-color 130ms ease,
+        box-shadow 130ms ease;
+    }
+
+    .button-primary.is-pressed,
+    .nav-cta.is-pressed {
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .14),
+        inset 0 -1px 0 rgba(0, 0, 0, .16),
+        inset 0 0 0 1px rgba(255, 255, 255, .10),
+        0 1px 1px rgba(143, 63, 44, .10),
+        0 5px 14px rgba(143, 63, 44, .24);
+    }
+
+    .button-secondary.is-pressed::before { background: rgba(23, 23, 22, .10); }
+
+    /* ===== Liquid Glass 材质层（导航控件专用，内容层无需使用） ===== */
+    .glass {
+      position: relative;
+      z-index: 5;
+      isolation: isolate;
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+      backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+    }
+
+    /* 玻璃基片：环境 tint + 顶部内高光 + 底部内暗 + Fresnel 内圈 */
+    .glass::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-radius: inherit;
+      background-color: var(--glass-tint);
+      box-shadow:
+        inset 0 1px 0 var(--glass-refl),
+        inset 0 -1px 0 var(--glass-refl-dark),
+        inset 0 0 0 1px var(--glass-inset-line);
+      transition: background-color 320ms ease, box-shadow 320ms ease;
+    }
+
+    /* 玻璃厚度：双层克制阴影（近层表现厚度，远层分离背景） */
+    .glass::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      border-radius: inherit;
+      box-shadow: var(--glass-shadow-near), var(--glass-shadow-far);
+      transition: box-shadow 340ms cubic-bezier(.34, 1.56, .64, 1);
+    }
+
+    .glass.tone-dark { color: var(--white-ink); }
+
+    .glass.tone-dark::before {
+      background-color: rgba(22, 22, 20, .30);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .20),
+        inset 0 -1px 0 rgba(0, 0, 0, .18),
+        inset 0 0 0 1px rgba(255, 255, 255, .09);
+    }
+
+    .glass.is-pressed::before {
+      background-color: rgba(23, 23, 22, .09);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .10),
+        inset 0 -1px 0 rgba(23, 23, 22, .07),
+        inset 0 0 0 1px rgba(255, 255, 255, .06);
+    }
+
+    .glass.tone-dark.is-pressed::before { background-color: rgba(0, 0, 0, .24); }
+
+    .glass.is-pressed::after { box-shadow: 0 1px 1px rgba(23, 23, 22, .05), 0 5px 14px rgba(23, 23, 22, .08); }
+
+    .glass.is-pressed {
+      transform: scale(1.035, .965);
+      transition:
+        transform 140ms cubic-bezier(.35, .9, .5, 1),
+        color 200ms ease;
+    }
+
+    .nav a.is-pressed { background-color: rgba(23, 23, 22, .08); }
+    .glass.tone-dark .nav a.is-pressed { background-color: rgba(255, 255, 255, .10); }
+
+    /* .glass 通用层申明在 .site-header 之后，需复权 sticky 定位 */
+    .site-header.glass { position: sticky; z-index: 50; }
 
     .hero-aside { border-top: 0; }
 
@@ -378,10 +533,10 @@
 
     @media (max-width: 767px) {
       .shell { width: min(calc(100% - 32px), var(--max-width)); }
-      .site-header { position: relative; }
+      .site-header.glass { position: relative; }
       .header-inner { min-height: 64px; }
       .brand-note, .nav a:not(.nav-cta) { display: none; }
-      .nav { gap: 0; }
+      .nav { gap: 8px; }
       .nav-cta { padding: 9px 11px; font-size: 12px; }
       .hero { padding: 64px 0 72px; }
       .hero-grid, .intro-grid, .safety-grid, .audience-grid, .cta-grid { grid-template-columns: 1fr; gap: 40px; }
@@ -421,17 +576,17 @@
   </style>
 </head>
 <body>
-  <header class="site-header" id="top">
+  <header class="site-header glass" id="top">
     <div class="shell header-inner">
       <a class="brand" href="#intro" aria-label="TailorFit 首页">
         <span class="brand-mark">TailorFit</span>
         <span class="brand-note">TRAIN WITH INTENTION</span>
       </a>
       <nav class="nav" aria-label="页面导航">
-        <a href="#features">功能</a>
-        <a href="#flow">流程</a>
-        <a href="#safety">安全</a>
-        <a class="nav-cta" href="#experience">扫码体验</a>
+        <a class="glass" href="#features">功能</a>
+        <a class="glass" href="#flow">流程</a>
+        <a class="glass" href="#safety">安全</a>
+        <a class="glass nav-cta" href="#experience">扫码体验</a>
       </nav>
     </div>
   </header>
@@ -445,7 +600,7 @@
           <p class="hero-copy"><span class="desktop-copy">TailorFit 把你的目标、训练经验、器械、时间和身体信息，整理成一份可以执行的 <strong>四周训练计划</strong>。不追求更复杂，只让下一次训练更清楚。</span><span class="mobile-copy">TailorFit 把你的训练条件，整理成<br>一份可以执行的 <strong>四周训练计划</strong>。<br>不追求更复杂，只让下一次训练更清楚。</span></p>
           <div class="hero-actions">
             <a class="button button-primary" href="#experience">扫码体验 TailorFit</a>
-            <a class="button button-secondary" href="#features">先看看它能做什么</a>
+            <a class="button button-secondary glass" href="#features">先看看它能做什么</a>
           </div>
         </div>
 
@@ -603,6 +758,342 @@
     } else {
       reveals.forEach((node) => node.classList.add('is-visible'));
     }
+
+    /* ---------- Liquid Glass 渲染引擎 ----------
+       结构：全屏透明 WebGL 层（z-index:1，pointer-events:none）位于所有玻璃控件之下。
+       玻璃材质 = CSS 多层透射/高光/阴影（兜底）+ WebGL 折射 shader（增强）。
+       折射法：整页 SVG 快照 → 纹理，每帧按「玻璃屏幕坐标 + 滚动偏移」采样；
+       采样点沿 SDF 法线在边缘带内径向位移，模拟凸玻璃的非均匀折射。
+       无 WebGL / 快照失败 → 自动回退为纯 CSS 材质。 */
+    var LiquidGlass = (function () {
+      'use strict';
+
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var GL = null, canvas = null, texture = null;
+      var texScale = { x: 1, y: 1 }, docW = 1, docH = 1;
+      var prog = null, locs = null, quadBuf = null;
+      var active = false, building = false, failures = 0;
+      var pressStates = new WeakMap();
+      var elements = [], lastTones = [];
+      var ranges = [], lastScrollY = -1, lastViewport = -1;
+
+      function buildRanges() {
+        ranges = [];
+        document.querySelectorAll('main > section, .dark-band, footer').forEach(function (sec) {
+          var top = sec.offsetTop;
+          ranges.push({ top: top, bottom: top + sec.offsetHeight, dark: sec.classList.contains('dark-band') });
+        });
+        ranges.sort(function (a, b) { return a.top - b.top; });
+      }
+
+      function toneAt(docCenterY) {
+        for (var i = 0; i < ranges.length; i++) {
+          if (docCenterY >= ranges[i].top && docCenterY < ranges[i].bottom) return ranges[i].dark ? 'dark' : 'light';
+        }
+        return 'light';
+      }
+
+      function createGL() {
+        canvas = document.createElement('canvas');
+        canvas.id = 'glass-render';
+        canvas.setAttribute('aria-hidden', 'true');
+        canvas.style.cssText = 'position:fixed;left:0;top:0;width:100%;height:100%;z-index:1;pointer-events:none;';
+        document.body.appendChild(canvas);
+        var opts = { alpha: true, premultipliedAlpha: false, antialias: false, depth: false, stencil: false };
+        GL = canvas.getContext('webgl', opts) || canvas.getContext('experimental-webgl', opts);
+        if (!GL) { canvas.remove(); canvas = null; return false; }
+        GL.pixelStorei(GL.UNPACK_FLIP_Y_WEBGL, true);
+        try { GL.getExtension('OES_standard_derivatives'); } catch (e) {}
+        return true;
+      }
+
+      function compile(type, src) {
+        var s = GL.createShader(type);
+        GL.shaderSource(s, src);
+        GL.compileShader(s);
+        return GL.getShaderParameter(s, GL.COMPILE_STATUS) ? s : null;
+      }
+
+      function buildProgram() {
+        var vs = compile(GL.VERTEX_SHADER, [
+          'attribute vec2 aPos; attribute vec2 aUv;',
+          'varying vec2 vUv; uniform vec4 uRect;',
+          'void main() { vUv = aUv; gl_Position = vec4(uRect.xy + aPos * uRect.zw, 0.0, 1.0); }'
+        ].join('\n'));
+        var fs = compile(GL.FRAGMENT_SHADER, [
+          'precision highp float;',
+          'varying vec2 vUv;',
+          'uniform sampler2D uTex;',
+          'uniform vec2 uSize; uniform vec2 uPos; uniform vec2 uScroll; uniform vec2 uTexScale;',
+          'uniform float uRadius; uniform float uPress; uniform float uDark;',
+          'uniform vec4 uAmbient;',
+          'void main() {',
+          '  vec2 hb = uSize * 0.5 - vec2(uRadius);',
+          '  vec2 p = (vUv - 0.5) * uSize;',
+          '  vec2 q = abs(p) - hb + uRadius;',
+          '  float d = length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - uRadius;',
+          '  float alpha = 1.0 - smoothstep(-1.2, 1.2, d);',
+          '  if (alpha < 0.02) discard;',
+          '  vec2 normal = normalize(vec2(dFdx(d), dFdy(d)) + 1e-4);',
+          '  float edge = smoothstep(16.0, 1.0, d);',
+          '  float disp = (1.5 + 9.0 * edge) * (1.0 + 1.4 * uPress);',
+          '  vec2 docPx = uPos + vUv * uSize + uScroll + normal * disp;',
+          '  vec2 tc = clamp(docPx * uTexScale, vec2(0.0), vec2(1.0));',
+          '  vec3 col = texture2D(uTex, tc).rgb;',
+          '  col = mix(col, uAmbient.rgb, uAmbient.a);',
+          '  vec3 reflected = texture2D(uTex, tc + vec2(0.0, 1.0) * uTexScale).rgb;',
+          '  float reflectW = smoothstep(14.0, 1.0, d) * 0.18;',
+          '  col = mix(col, reflected, reflectW);',
+          '  float fres = smoothstep(11.0, 0.0, d);',
+          '  col += vec3(0.95) * fres * (0.045 + 0.08 * uPress + 0.025 * uDark);',
+          '  col += vec3(1.0) * fres * (1.0 - clamp(vUv.y * 4.0, 0.0, 1.0)) * 0.09;',
+          '  col *= 1.0 + 0.05 * uDark;',
+          '  gl_FragColor = vec4(col, alpha);',
+          '}'
+        ].join('\n'));
+        if (!vs || !fs) return null;
+        var p = GL.createProgram();
+        GL.attachShader(p, vs);
+        GL.attachShader(p, fs);
+        GL.linkProgram(p);
+        if (!GL.getProgramParameter(p, GL.LINK_STATUS)) return null;
+        locs = {
+          uRect: GL.getUniformLocation(p, 'uRect'),
+          uTex: GL.getUniformLocation(p, 'uTex'),
+          uSize: GL.getUniformLocation(p, 'uSize'),
+          uPos: GL.getUniformLocation(p, 'uPos'),
+          uScroll: GL.getUniformLocation(p, 'uScroll'),
+          uTexScale: GL.getUniformLocation(p, 'uTexScale'),
+          uRadius: GL.getUniformLocation(p, 'uRadius'),
+          uPress: GL.getUniformLocation(p, 'uPress'),
+          uDark: GL.getUniformLocation(p, 'uDark'),
+          uAmbient: GL.getUniformLocation(p, 'uAmbient'),
+          aPos: GL.getAttribLocation(p, 'aPos'),
+          aUv: GL.getAttribLocation(p, 'aUv')
+        };
+        return p;
+      }
+
+      function buildQuad() {
+        quadBuf = GL.createBuffer();
+        GL.bindBuffer(GL.ARRAY_BUFFER, quadBuf);
+        GL.bufferData(GL.ARRAY_BUFFER, new Float32Array([
+          0, 0, 0, 0,   1, 0, 1, 0,   0, 1, 0, 1,
+          0, 1, 0, 1,   1, 0, 1, 0,   1, 1, 1, 1
+        ]), GL.STATIC_DRAW);
+      }
+
+      /* 整页 SVG 快照 → 纹理（一次性构建，滚动只做采样偏移，不加算力） */
+      function buildSnapshot() {
+        if (!active || building) return;
+        building = true;
+        docW = Math.max(document.documentElement.scrollWidth || 1, 1);
+        docH = Math.max(document.documentElement.scrollHeight || 1, 1);
+        var clone = document.documentElement.cloneNode(true);
+        clone.classList.remove('js');
+        var imgs = clone.querySelectorAll('img');
+        for (var i = 0; i < imgs.length; i++) {
+          var srcAttr = imgs[i].getAttribute('src');
+          if (srcAttr) imgs[i].setAttribute('src', new URL(srcAttr, location.href).href);
+        }
+        var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + docW + '" height="' + docH + '">' +
+          '<foreignObject width="100%" height="100%">' +
+          '<html xmlns="http://www.w3.org/1999/xhtml">' + clone.innerHTML + '</html>' +
+          '</foreignObject></svg>';
+        var url = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml;charset=utf-8' }));
+        var img = new Image();
+        img.onload = function () {
+          URL.revokeObjectURL(url);
+          var s = Math.min(1, 3072 / Math.max(docW, docH));
+          var cv = document.createElement('canvas');
+          cv.width = Math.max(2, Math.round(docW * s));
+          cv.height = Math.max(2, Math.round(docH * s));
+          cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+          if (!probeCanvas(cv)) { failOnce(); return; }
+          uploadTexture(cv);
+        };
+        img.onerror = function () { URL.revokeObjectURL(url); failOnce(); };
+        img.src = url;
+      }
+
+      function probeCanvas(cv) {
+        var w = Math.min(24, cv.width), h = Math.min(24, cv.height);
+        var data = cv.getContext('2d').getImageData(0, 0, w, h).data;
+        var base = data[0], sum = 0, varying = false;
+        for (var i = 0; i < w * h; i += 3) {
+          var o = i * 4;
+          sum += data[o] + data[o + 1] + data[o + 2];
+          if (Math.abs(data[o] - base) > 4) varying = true;
+        }
+        return sum > 0 && varying;
+      }
+
+      function failOnce() {
+        building = false;
+        if (++failures >= 2) teardown();
+      }
+
+      function uploadTexture(cv) {
+        if (!GL) return;
+        if (texture) GL.deleteTexture(texture);
+        texture = GL.createTexture();
+        GL.bindTexture(GL.TEXTURE_2D, texture);
+        GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, GL.RGBA, GL.UNSIGNED_BYTE, cv);
+        GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, GL.LINEAR);
+        GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, GL.LINEAR);
+        GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.CLAMP_TO_EDGE);
+        GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.CLAMP_TO_EDGE);
+        texScale.x = 1 / docW;
+        texScale.y = 1 / docH;
+        building = false;
+      }
+
+      function bindPress(el) {
+        if (el.tagName !== 'A' && el.tagName !== 'BUTTON') return;
+        var st = { v: 0, t: 0 };
+        pressStates.set(el, st);
+        el.addEventListener('pointerdown', function () {
+          if (reduceMotion) st.v = 1;
+          st.t = 1;
+          el.classList.add('is-pressed');
+        });
+        ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (ev) {
+          el.addEventListener(ev, function () {
+            if (reduceMotion) st.v = 0;
+            st.t = 0;
+            el.classList.remove('is-pressed');
+          });
+        });
+      }
+
+      function applyTone(el, tone) {
+        if (tone === 'dark') el.classList.add('tone-dark');
+        else el.classList.remove('tone-dark');
+        if (el.classList.contains('site-header')) {
+          el.classList.toggle('is-scrolled', (window.scrollY || 0) > 14);
+        }
+      }
+
+      function drawGlass(el, dpr, viewW, viewH) {
+        var rect = el.getBoundingClientRect();
+        if (rect.width < 2 || rect.height < 2) return;
+        var W = rect.width, H = rect.height;
+        var st = pressStates.get(el) || { v: 0 };
+        GL.useProgram(prog);
+        GL.bindBuffer(GL.ARRAY_BUFFER, quadBuf);
+        GL.enableVertexAttribArray(locs.aPos);
+        GL.vertexAttribPointer(locs.aPos, 2, GL.FLOAT, false, 16, 0);
+        GL.enableVertexAttribArray(locs.aUv);
+        GL.vertexAttribPointer(locs.aUv, 2, GL.FLOAT, false, 16, 8);
+        GL.uniform1i(locs.uTex, 0);
+        GL.activeTexture(GL.TEXTURE0);
+        GL.bindTexture(GL.TEXTURE_2D, texture);
+        GL.uniform4f(locs.uRect,
+          (rect.left / viewW) * 2 - 1,
+          1 - ((rect.top + H) / viewH) * 2,
+          (W / viewW) * 2,
+          -(H / viewH) * 2);
+        GL.uniform2f(locs.uSize, W, H);
+        GL.uniform2f(locs.uPos, rect.left, rect.top);
+        GL.uniform2f(locs.uScroll, window.scrollX || 0, window.scrollY || 0);
+        GL.uniform2f(locs.uTexScale, texScale.x, texScale.y);
+        GL.uniform1f(locs.uRadius, parseFloat(getComputedStyle(el).borderTopLeftRadius) || 0);
+        GL.uniform1f(locs.uPress, reduceMotion ? st.t : st.v);
+        GL.scissor(
+          Math.round(rect.left * dpr),
+          Math.round((viewH - rect.bottom) * dpr),
+          Math.max(1, Math.round(W * dpr)),
+          Math.max(1, Math.round(H * dpr)));
+        drawGlassTone(el, rect);
+        GL.drawArrays(GL.TRIANGLES, 0, 6);
+      }
+
+      function drawGlassTone(el, rect) {
+        var tone = toneAt(rect.top + rect.height / 2 + (window.scrollY || 0));
+        if (tone === 'dark') {
+          GL.uniform1f(locs.uDark, 1);
+          GL.uniform4f(locs.uAmbient, 0.10, 0.10, 0.09, 0.16);
+        } else {
+          GL.uniform1f(locs.uDark, 0);
+          GL.uniform4f(locs.uAmbient, 0.97, 0.96, 0.93, 0.11);
+        }
+        return tone;
+      }
+
+      function loop() {
+        if (!active) return;
+        if (!GL || !texture) { requestAnimationFrame(loop); return; }
+        var dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+        var viewW = canvas.clientWidth, viewH = canvas.clientHeight;
+        var vpKey = Math.round(viewW * dpr) + 'x' + Math.round(viewH * dpr);
+        var changed = vpKey !== lastViewport;
+        if (changed) {
+          lastViewport = vpKey;
+          canvas.width = Math.round(viewW * dpr);
+          canvas.height = Math.round(viewH * dpr);
+          GL.viewport(0, 0, canvas.width, canvas.height);
+        }
+        var scrolled = (window.scrollY || 0) !== lastScrollY;
+        if (scrolled) lastScrollY = window.scrollY || 0;
+        for (var i = 0; i < elements.length; i++) {
+          var el = elements[i];
+          var st = pressStates.get(el);
+          if (st && st.t !== st.v) {
+            springStep(st);
+            changed = true;
+          }
+          if (scrolled) {
+            var tone = drawGlassTone(el, el.getBoundingClientRect());
+            if (tone !== lastTones[i]) { lastTones[i] = tone; applyTone(el, tone); }
+          }
+        }
+        if (!changed && !scrolled) { requestAnimationFrame(loop); return; }
+        GL.enable(GL.SCISSOR_TEST);
+        GL.clearColor(0, 0, 0, 0);
+        GL.clear(GL.COLOR_BUFFER_BIT);
+        for (var j = 0; j < elements.length; j++) drawGlass(elements[j], dpr, viewW, viewH);
+        GL.disable(GL.SCISSOR_TEST);
+        requestAnimationFrame(loop);
+      }
+
+      function springStep(st) {
+        st.v += (st.t - st.v) * (1 - Math.exp(-(st.t > 0 ? 22 : 13) * 0.016));
+        if (Math.abs(st.t - st.v) < 0.002) st.v = st.t;
+      }
+
+      function teardown() {
+        active = false;
+        if (canvas) { canvas.remove(); canvas = null; }
+        GL = null; texture = null;
+      }
+
+      function init() {
+        if (!window.WebGLRenderingContext) return;
+        active = true;
+        if (!createGL()) { teardown(); return; }
+        prog = buildProgram();
+        if (!prog) { teardown(); return; }
+        buildQuad();
+        buildRanges();
+        elements = Array.prototype.slice.call(document.querySelectorAll('.glass'));
+        if (!elements.length) { teardown(); return; }
+        lastTones = elements.map(function () { return null; });
+        elements.forEach(bindPress);
+        var snap = function () { buildSnapshot(); };
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(snap, snap);
+        if (document.readyState === 'complete') window.setTimeout(snap, 250);
+        else window.addEventListener('load', function () { window.setTimeout(snap, 250); });
+        window.addEventListener('resize', function () {
+          buildRanges();
+          window.setTimeout(buildSnapshot, 500);
+        });
+        requestAnimationFrame(loop);
+      }
+
+      return { init: init };
+    })();
+
+    LiquidGlass.init();
   </script>
 </body>
 </html>
