@@ -164,8 +164,8 @@
 
     .nav a:active { transition-duration: 110ms; }
 
-    .site-header.tone-dark .nav a { color: #d8d5cd; }
-    .site-header.tone-dark .nav a:hover { color: var(--white-ink); background-color: rgba(255, 255, 255, .12); }
+    .site-header.tone-dark .nav a { color: #ece9e1; }
+    .site-header.tone-dark .nav a:hover { color: #ffffff; background-color: rgba(255, 255, 255, .16); }
 
     .nav-cta {
       padding: 11px 18px;
@@ -775,7 +775,7 @@
       var active = false, building = false, failures = 0;
       var pressStates = new WeakMap();
       var elements = [], lastTones = [];
-      var ranges = [], lastScrollY = -1, lastViewport = -1;
+      var ranges = [], lastTrackScrollY = -1, toneRAF = null, lastRenderScrollY = -1, lastViewport = -1;
 
       function buildRanges() {
         ranges = [];
@@ -974,6 +974,32 @@
         }
       }
 
+      /* 明暗适配独立于 WebGL：滚动/缩放时始终更新玻璃控件的 tone，WebGL 失败也不影响文字可读性 */
+      function refreshTone(force) {
+        var scrollY = window.scrollY || 0;
+        if (!force && scrollY === lastTrackScrollY) return;
+        lastTrackScrollY = scrollY;
+        for (var i = 0; i < elements.length; i++) {
+          var rect = elements[i].getBoundingClientRect();
+          var tone = toneAt(rect.top + rect.height / 2 + scrollY);
+          if (tone !== lastTones[i]) { lastTones[i] = tone; applyTone(elements[i], tone); }
+        }
+      }
+
+      function onScroll() {
+        if (toneRAF) return;
+        toneRAF = requestAnimationFrame(function () {
+          toneRAF = null;
+          refreshTone(false);
+        });
+      }
+
+      function onResize() {
+        buildRanges();
+        refreshTone(true);
+        window.setTimeout(buildSnapshot, 500);
+      }
+
       function drawGlass(el, dpr, viewW, viewH) {
         var rect = el.getBoundingClientRect();
         if (rect.width < 2 || rect.height < 2) return;
@@ -1033,21 +1059,16 @@
           canvas.height = Math.round(viewH * dpr);
           GL.viewport(0, 0, canvas.width, canvas.height);
         }
-        var scrolled = (window.scrollY || 0) !== lastScrollY;
-        if (scrolled) lastScrollY = window.scrollY || 0;
+        var scrolled = (window.scrollY || 0) !== lastRenderScrollY;
+        if (scrolled) { lastRenderScrollY = window.scrollY || 0; changed = true; }
         for (var i = 0; i < elements.length; i++) {
-          var el = elements[i];
-          var st = pressStates.get(el);
+          var st = pressStates.get(elements[i]);
           if (st && st.t !== st.v) {
             springStep(st);
             changed = true;
           }
-          if (scrolled) {
-            var tone = drawGlassTone(el, el.getBoundingClientRect());
-            if (tone !== lastTones[i]) { lastTones[i] = tone; applyTone(el, tone); }
-          }
         }
-        if (!changed && !scrolled) { requestAnimationFrame(loop); return; }
+        if (!changed) { requestAnimationFrame(loop); return; }
         GL.enable(GL.SCISSOR_TEST);
         GL.clearColor(0, 0, 0, 0);
         GL.clear(GL.COLOR_BUFFER_BIT);
@@ -1068,25 +1089,24 @@
       }
 
       function init() {
+        buildRanges();
+        elements = Array.prototype.slice.call(document.querySelectorAll('.glass'));
+        if (!elements.length) return;
+        lastTones = elements.map(function () { return null; });
+        elements.forEach(bindPress);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onResize);
+        refreshTone(true);
         if (!window.WebGLRenderingContext) return;
         active = true;
         if (!createGL()) { teardown(); return; }
         prog = buildProgram();
         if (!prog) { teardown(); return; }
         buildQuad();
-        buildRanges();
-        elements = Array.prototype.slice.call(document.querySelectorAll('.glass'));
-        if (!elements.length) { teardown(); return; }
-        lastTones = elements.map(function () { return null; });
-        elements.forEach(bindPress);
         var snap = function () { buildSnapshot(); };
         if (document.fonts && document.fonts.ready) document.fonts.ready.then(snap, snap);
         if (document.readyState === 'complete') window.setTimeout(snap, 250);
         else window.addEventListener('load', function () { window.setTimeout(snap, 250); });
-        window.addEventListener('resize', function () {
-          buildRanges();
-          window.setTimeout(buildSnapshot, 500);
-        });
         requestAnimationFrame(loop);
       }
 
