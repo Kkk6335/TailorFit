@@ -243,7 +243,7 @@ Write-Output 'Static checks passed'
 - 约束：后续功能变更均编辑同一文件；新增文件需有明确理由。
 - 路径/验证：`index.html` 全文件；无外部 CSS/JS 依赖。
 
-#### Claude 编辑风格视觉约束（Liquid Glass 版）
+#### Liquid Glass 视觉约束
 - 决策：暖象牙纸色（`#f4f0e8`）+ 近黑石板色（`#2b2b28`）+ 陶土橙强调（`#bd5b3e`）为基础设计语言；导航控件层采用 Apple Liquid Glass 液态玻璃材质（2025-08 视觉改版授权）。
 - 原因：与 TailorFit "训练留一份清楚计划"理念一致，克制专业；玻璃材质只赋予导航控件，内容层保持干净底色。
 - 约束：`box-shadow` / 渐变（`linear-gradient`、`radial-gradient`）仅允许用于 `.glass` 材质层与实色玻璃按钮（inset 高光、Fresnel 内圈、双层投射阴影），禁止用于内容卡片、正文与标签；玻璃控件必须带 `.glass` 类以参与 WebGL 折射层绘制。
