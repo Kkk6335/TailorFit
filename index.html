@@ -25,8 +25,8 @@
       --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
       --glass-blur: 5px;
       --glass-sat: 1.22;
-      --glass-tint: rgba(250, 248, 242, .13);
-      --glass-tint-strong: rgba(250, 248, 242, .30);
+      --glass-tint: rgba(250, 248, 242, .08);
+      --glass-tint-strong: rgba(250, 248, 242, .20);
       --glass-refl: rgba(255, 255, 255, .16);
       --glass-refl-dark: rgba(23, 23, 22, .05);
       --glass-inset-line: rgba(255, 255, 255, .08);
@@ -96,14 +96,14 @@
       z-index: 50;
       top: 0;
       border-bottom: 0;
-      --glass-tint: rgba(250, 248, 242, .11);
+      --glass-tint: rgba(250, 248, 242, .07);
     }
 
     .site-header.is-scrolled::before { background-color: var(--glass-tint-strong); }
 
     .site-header.tone-dark { color: var(--white-ink); }
     .site-header.tone-dark::before {
-      background: rgba(22, 22, 20, .44);
+      background: rgba(22, 22, 20, .30);
       box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, .20),
         inset 0 -1px 0 rgba(0, 0, 0, .18),
@@ -337,7 +337,7 @@
     .glass.tone-dark { color: var(--white-ink); }
 
     .glass.tone-dark::before {
-      background-color: rgba(22, 22, 20, .30);
+      background-color: rgba(22, 22, 20, .20);
       box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, .20),
         inset 0 -1px 0 rgba(0, 0, 0, .18),
@@ -345,14 +345,14 @@
     }
 
     .glass.is-pressed::before {
-      background-color: rgba(23, 23, 22, .09);
+      background-color: rgba(23, 23, 22, .06);
       box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, .10),
         inset 0 -1px 0 rgba(23, 23, 22, .07),
         inset 0 0 0 1px rgba(255, 255, 255, .06);
     }
 
-    .glass.tone-dark.is-pressed::before { background-color: rgba(0, 0, 0, .24); }
+    .glass.tone-dark.is-pressed::before { background-color: rgba(0, 0, 0, .16); }
 
     .glass.is-pressed::after { box-shadow: 0 1px 1px rgba(23, 23, 22, .05), 0 5px 14px rgba(23, 23, 22, .08); }
 
@@ -1041,10 +1041,10 @@
         var tone = toneAt(rect.top + rect.height / 2 + (window.scrollY || 0));
         if (tone === 'dark') {
           GL.uniform1f(locs.uDark, 1);
-          GL.uniform4f(locs.uAmbient, 0.10, 0.10, 0.09, 0.16);
+          GL.uniform4f(locs.uAmbient, 0.10, 0.10, 0.09, 0.10);
         } else {
           GL.uniform1f(locs.uDark, 0);
-          GL.uniform4f(locs.uAmbient, 0.97, 0.96, 0.93, 0.11);
+          GL.uniform4f(locs.uAmbient, 0.97, 0.96, 0.93, 0.07);
         }
         return tone;
       }
