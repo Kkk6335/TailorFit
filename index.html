@@ -27,9 +27,9 @@
       --glass-sat: 1.22;
       --glass-tint: rgba(250, 248, 242, .05);
       --glass-tint-strong: rgba(250, 248, 242, .14);
-      --glass-refl: rgba(255, 255, 255, .16);
+      --glass-refl: rgba(255, 255, 255, .22);
       --glass-refl-dark: rgba(23, 23, 22, .05);
-      --glass-inset-line: rgba(255, 255, 255, .08);
+      --glass-inset-line: rgba(255, 255, 255, .11);
       --glass-shadow-near: 0 1px 1px rgba(23, 23, 22, .06);
       --glass-shadow-far: 0 12px 30px rgba(23, 23, 22, .11);
     }
@@ -339,9 +339,9 @@
     .glass.tone-dark::before {
       background-color: rgba(22, 22, 20, .14);
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, .20),
+        inset 0 1px 0 rgba(255, 255, 255, .26),
         inset 0 -1px 0 rgba(0, 0, 0, .18),
-        inset 0 0 0 1px rgba(255, 255, 255, .09);
+        inset 0 0 0 1px rgba(255, 255, 255, .12);
     }
 
     .glass.is-pressed::before {
@@ -845,11 +845,11 @@
           '  vec3 col = texture2D(uTex, tc).rgb;',
           '  col = mix(col, uAmbient.rgb, uAmbient.a);',
           '  vec3 reflected = texture2D(uTex, tc + vec2(0.0, 1.0) * uTexScale).rgb;',
-          '  float reflectW = smoothstep(14.0, 1.0, d) * 0.18;',
+          '  float reflectW = smoothstep(14.0, 1.0, d) * 0.22;',
           '  col = mix(col, reflected, reflectW);',
           '  float fres = smoothstep(11.0, 0.0, d);',
-          '  col += vec3(0.95) * fres * (0.045 + 0.08 * uPress + 0.025 * uDark);',
-          '  col += vec3(1.0) * fres * (1.0 - clamp(vUv.y * 4.0, 0.0, 1.0)) * 0.09;',
+          '  col += vec3(0.95) * fres * (0.06 + 0.09 * uPress + 0.03 * uDark);',
+          '  col += vec3(1.0) * fres * (1.0 - clamp(vUv.y * 4.0, 0.0, 1.0)) * 0.11;',
           '  col *= 1.0 + 0.05 * uDark;',
           '  gl_FragColor = vec4(col, alpha);',
           '}'
