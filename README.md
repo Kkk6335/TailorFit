@@ -12,7 +12,7 @@ TailorFit 是一款微信小程序，帮助用户将目标、训练经验、器�
 
 ## 当前已实现
 
-- 响应式产品介绍页（桌面端 + 移动端，breakpoint 768px）
+- 响应式产品介绍页（桌面端 + 移动端，breakpoint 767px）
 - 品牌展示与产品定位说明
 - 体验版二维码入口（`assets/tailorfit-experience-qr.png`）
 - 八大功能卡片展示：

@@ -16,10 +16,10 @@
 
 任务结束后：
 
-1. 完成"AI 完成任务后的强制检查"。
+1. 完成“AI 完成任务后的强制检查”。
 2. 只同步受影响的文档。
 3. 只有变更具有长期回溯价值时，才在 `docs/ai-log/` 写简短日志。
-4. 按"AI 交接"模板说明结果与验证边界。
+4. 按“AI 交接”模板说明结果与验证边界。
 
 ### 优先级
 
@@ -35,9 +35,9 @@
 ### 项目简介
 
 - 项目是什么：TailorFit 微信小程序的独立静态宣传落地页（Intro Page），单文件纯静态实现。
-- 解决什么问题：为 TailorFit 小程序提供产品介绍入口，引导新用户微信扫码体验，不替代小程序本体。
+- 解决什么问题：为 TailorFit 小程序提供产品介绍入口，引导新用户微信扫码体验；不替代小程序本体。
 - 当前阶段：MVP（单页展示，无后端，无用户数据收集）。
-- 当前开发重点：保持页面文案与小程序功能同步，二维码有效期到期后及时更新。
+- 当前开发重点：保持页面文案与小程序功能同步，二维码有效期到期后及时更新；维护 Liquid Glass 回退路径与可访问性。
 
 ### 技术栈
 
@@ -47,29 +47,32 @@
 | Backend | 无（纯静态页） |
 | Database | 无 |
 | Deployment | 任意静态托管或直接双击打开 `index.html` |
-| AI | DeepSeek API（仅小程序端使用，本页不涉及调用） |
+| AI | DeepSeek API（仅小程序端使用，本页不调用） |
 | Storage | 无（本页不收集任何数据） |
 
 ### 仓库地图
 
 | 路径 | 用途 | 备注 |
 | --- | --- | --- |
-| `index.html` | 主页面（HTML+CSS+JS 内嵌） | 单文件，无需构建，直接打开即可 |
-| `assets/tailorfit-experience-qr.png` | 体验版二维码图片 | 本地副本，路径相对引用 |
+| `index.html` | 主页面源码（HTML + CSS + JS 内嵌） | 单文件，无需构建，直接打开即可 |
+| `assets/tailorfit-experience-qr.png` | 体验版二维码资源 | 本地副本，页面使用相对路径 |
 | `docs/superpowers/plans/` | 开发计划文档 | 任务拆分子计划，非运行时依赖 |
 | `docs/superpowers/specs/` | 设计规格文档 | 视觉与交互规格说明 |
-| `docs/ai-log/` | AI 开发日志 | 每次重大变更后写入 YYYY-MM-DD.md |
+| `docs/ai-log/` | AI 开发日志 | 重大变更后记录 |
 | `AGENTS.md` | AI 开发规范与项目知识库 | 本文件 |
 | `README.md` | 项目说明文档 | 面向开发者与使用者 |
+
+测试、脚本与构建产物：未配置，纯静态项目无独立测试文件或构建输出。
 
 ### 命令与验证（必填）
 
 | 目的 | 命令 |
 | --- | --- |
-| 本地预览 | 直接用浏览器打开 `index.html` |
-| 静态结构检查 | 见下方 PowerShell 脚本 |
-| Lint / 类型检查 | 未配置（纯静态页，无构建工具） |
-| 构建 | 无需构建，直接部署 `index.html` 及 `assets/` |
+| 安装依赖 | 无（零依赖） |
+| 本地开发 | 直接用浏览器打开 `index.html` |
+| 测试 | 下方 PowerShell 静态结构检查 |
+| Lint / 类型检查 | 未配置（纯静态单文件，无构建工具） |
+| 构建 | 无需构建，直接部署 `index.html` 与 `assets/` |
 
 **静态结构验证**（PowerShell）：
 
@@ -80,7 +83,7 @@ if ($html -match '[Tt][Oo][Dd][Oo]|[Tt][Bb][Dd]|[Ll]orem ipsum') { throw 'Placeh
 Write-Output 'Static checks passed'
 ```
 
-完成前至少运行与改动相关的验证。未配置自动测试时，至少执行可用的语法、类型、构建或关键路径自检，并说明验证边界。验证失败、无法运行或仅完成部分验证时，不得描述为"已验证通过"；必须明确说明失败项和未验证范围。单元测试不等于浏览器、设备、无障碍、真实 API 或生产环境验证。
+完成前至少运行与改动相关的验证。未配置自动测试时，至少执行可用的语法、类型、构建或关键路径自检，并说明验证边界。验证失败、无法运行或仅完成部分验证时，不得描述为“已验证通过”；必须明确说明失败项和未验证范围。单元测试不等于浏览器、设备、无障碍、真实 API 或生产环境验证。
 
 ## 二、开发硬规则（通用，少改）
 
@@ -96,7 +99,7 @@ Write-Output 'Static checks passed'
 
 不要：
 
-- 猜测业务逻辑、API、数据库结构或"应该存在"的功能。
+- 猜测业务逻辑、API、数据库结构或“应该存在”的功能。
 - 为局部问题做全局重构、删除看不懂的代码或引入无必要依赖。
 - 修改与当前任务无关的代码、文件或格式。
 - 重复实现已有能力。
@@ -123,7 +126,6 @@ Write-Output 'Static checks passed'
 
 ### Git
 
-- 用户未明确要求时，不要 commit、push、建分支、开 PR 或修改 Git 配置。
 - 用户要求提交时，暂存前检查文件范围与敏感信息；一次提交只包含一个逻辑变更。
 - 提交说明优先使用 `feat:`、`fix:`、`docs:`、`refactor:`、`test:`、`style:` 或 `chore:`。
 
@@ -145,9 +147,9 @@ Write-Output 'Static checks passed'
 | 安装、启动、开发流程 | README / 部署说明 |
 | 环境变量 | `.env.example` 与相关说明 |
 | 架构约定、限制、坑、设计决策 | 本文件对应节 |
-| 用户可见功能增减 | README 与"当前已实现功能" |
+| 用户可见功能增减 | README 与“当前已实现功能” |
 
-若本次变更不影响文档，在交接中写"文档无需同步"；禁止为打卡而空改文档。
+若本次变更不影响文档，在交接中写“文档无需同步”；禁止为打卡而空改文档。
 
 开发日志写在 `docs/ai-log/YYYY-MM-DD-<topic>.md`，只记录重大行为变更、不可直观看出的取舍、重要故障复盘或发布风险。纯格式调整、可从 Git diff 直接理解的改动无需新增日志。
 
@@ -157,14 +159,14 @@ Write-Output 'Static checks passed'
 - 能从 README、代码、测试或配置中直接明显推断出的事实，不重复写入项目知识。
 - 同一根因只保留一条：后续同类发现应更新、合并或替换原条目，不追加近似记录。
 - 已废弃、被替代、只适用于一次性实现、无法关联当前代码或测试的内容直接删除。
-- 历史依据通过 Git 提交与 `docs/ai-log/` 查找；不要为了"可追溯"在 AGENTS 保留失效规则。
+- 历史依据通过 Git 提交与 `docs/ai-log/` 查找；不要为了“可追溯”在 AGENTS 保留失效规则。
 - `当前已实现功能` 最多 12 条，`当前限制` 最多 8 条，`Known Pitfalls` 最多 12 条，`Design Decisions` 最多 8 条。达到上限先合并、淘汰或拆到相应模块文档。
 - 每条坑和决策必须给出当前路径、模块或验证命令；没有可验证落点就不写入。
 - 每次涉及这些知识节时，先做一次去重和有效性检查；不能累积新增近似条目。
 
 ### AI 完成任务后的强制检查
 
-每项结论只能是"已更新"或"无需更新（原因一句话）"：
+每项结论只能是“已更新”或“无需更新（原因一句话）”：
 
 - README
 - AGENTS
@@ -179,16 +181,17 @@ Write-Output 'Static checks passed'
 
 ### 当前已实现功能
 
-- 响应式产品介绍页（桌面端 + 移动端，breakpoint 768px）
+- 响应式产品介绍页（桌面端 + 移动端，`max-width: 767px` 断点切单列）
 - 品牌展示与产品定位说明（TailorFit，`TRAIN WITH INTENTION` tagline）
-- 体验版二维码入口（`assets/tailorfit-experience-qr.png`，有效期至 8 月 16 日）
-- 八大功能卡片展示（AI 计划、内置方案、本地创建、仪表盘、打卡、分析、调整、导出）
+- 体验版二维码入口（`assets/tailorfit-experience-qr.png`，文案有效期至 8 月 16 日）
+- 八大功能卡片展示（AI 个性化四周计划、六套内置方案、本地创建、训练仪表盘、真实打卡、本地训练分析、当前计划可调整、JSON 导入导出）
 - 四步使用流程（了解自己 → 选择方式 → 完成训练 → 分析变化）
-- 安全与隐私说明（本地优先、API Key 保护、AI 非医疗建议）
-- 适用人群标签（5 类人群标签）
-- 滚动入场动画（IntersectionObserver，尊重 `prefers-reduced-motion`）
+- 安全与隐私说明（无后端、本地优先、DeepSeek 直连、API Key 不导出、AI 非医疗建议）
+- 适用人群标签（5 类人群）
+- 滚动入场动画（IntersectionObserver threshold 0.12，尊重 `prefers-reduced-motion`）
 - Liquid Glass 液态玻璃导航材质（顶栏 / 导航胶囊 / CTA 按钮：WebGL 折射 + CSS 多层玻璃，自动明暗适配与按压形变）
-- WCAG 2.2 AA 可访问性（焦点状态、alt 文本、语义化 HTML）
+- WCAG 2.2 AA 可访问性（`focus-visible` 焦点状态、图片 alt、语义化 HTML、渐进增强）
+- 年份自动更新（`data-current-year` + JS 替换 footer 年份）
 
 ### 当前限制
 
@@ -197,43 +200,39 @@ Write-Output 'Static checks passed'
 - 无分析/埋点，无法追踪页面访问数据。
 - 二维码图片需保持本地路径，不可外链。
 - WebGL 折射为渐进增强：无 WebGL、SVG 快照渲染失败或快照内容校验失败时自动回退为 CSS 多层玻璃材质（无折射位移）。
+- 未配置自动化测试与真实浏览器视觉/交互验证流程。
 
 ### Known Pitfalls
 
-```md
 #### [视觉] Liquid Glass 只作用于导航控件层
-- 触发条件：给内容卡片、标签或正文添加玻璃效果时。
-- 必须做法：`.glass` 材质只用于导航栏、导航胶囊、按钮等交互控件；内容层保持干净底色，避免全页玻璃化。
-- 路径/验证：`index.html` 中 `.glass` 类只出现在 `site-header`、`.nav a`、`.button` 上。
-```
+- 触发条件：给内容卡片、标签或正文添加 `.glass` 材质时。
+- 必须做法：`.glass` 只用于顶栏、导航胶囊链接、CTA 按钮等交互控件；内容层保持干净底色，避免全页玻璃化。
+- 路径/测试：`index.html` 中 `class="glass` 出现范围；静态结构检查包含 `class="glass`。
 
-```md
-#### [视觉] CSS 层申明顺序覆盖 sticky 定位
+#### [视觉] `.glass` 层申明顺序覆盖 sticky 定位
 - 触发条件：新增 `.glass` 材质或调整 `.site-header` 定位时。
 - 必须做法：`.glass` 的 `position: relative; z-index: 5` 会覆盖 `.site-header` 的 `position: sticky`，须保留 `.site-header.glass { position: sticky; z-index: 50; }` 复权规则。
-- 路径/验证：`index.html` 中 `.site-header.glass` 规则、`glass-render` canvas 的 z-index。
-```
+- 路径/测试：`index.html` 中 `.site-header.glass` 规则与 `glass-render` canvas 的 z-index。
 
-```md
 #### [视觉] 阴影与渐变限用于玻璃材质
-- 触发条件：添加卡片悬浮效果或普通内容阴影时。
-- 必须做法：`box-shadow` / 渐变仅用于 `.glass` 材质层与实色玻璃按钮（inset 高光、Fresnel、双层投射阴影）；内容卡片、正文禁止使用。
-- 路径/验证：`index.html` 中 `box-shadow` 与 `--glass-*` 变量定义处。
-```
+- 触发条件：给内容卡片、正文或标签添加阴影或渐变时。
+- 必须做法：`box-shadow` / 渐变仅用于 `.glass` 材质层与实色玻璃按钮（inset 高光、Fresnel、双层投射阴影）；内容层禁止使用。
+- 路径/测试：`index.html` 中 `--glass-*` 变量与 `.glass` 规则；`rg "box-shadow|linear-gradient|radial-gradient" index.html` 检查使用范围。
 
-```md
-#### [文案] 二维码有效期硬编码
-- 触发条件：修改 CTA 文案或 footer 有效期说明时。
-- 必须做法：页面中提及有效期的文案共 3 处（首屏 qr-card、CTA 区块正文、footer），必须同时更新。
-- 路径/验证：`index.html` 中搜索 `8 月 16 日` 或 `8.16` 确认所有位置。
-```
+#### [文案] 二维码有效期硬编码 4 处
+- 触发条件：修改二维码有效期文案时。
+- 必须做法：同步更新 4 处：首屏 `qr-card` 的 `.expiry`、CTA 区块正文、CTA 二维码小字（`8.16 前有效`）、footer。
+- 路径/测试：`index.html` 搜索 `8 月` / `8.16` 确认所有位置。
 
-```md
-#### [资源] QR 图片路径固定为 assets/
+#### [资源] QR 图片路径固定为 `assets/`
 - 触发条件：更新二维码图片时。
-- 必须做法：将新图片保存为 `assets/tailorfit-experience-qr.png`，不可改为外链或改名；页面引用为相对路径。
-- 路径/验证：`index.html` 中搜索 `tailorfit-experience-qr.png`。
-```
+- 必须做法：将新图片覆盖保存为 `assets/tailorfit-experience-qr.png`，不可改为外链或改名；页面引用保持相对路径。
+- 路径/测试：`index.html` 搜索 `tailorfit-experience-qr.png`。
+
+#### [兼容] WebGL 快照失败必须保留 CSS 玻璃回退
+- 触发条件：无 WebGL、SVG 快照渲染失败或快照内容校验失败时。
+- 必须做法：不得让页面功能、文字可读性或 CTA 依赖 WebGL；`LiquidGlass` 移除 canvas 后 CSS 多层玻璃仍需完整可用。
+- 路径/测试：`index.html` 中 `LiquidGlass.init()` / `failOnce()` 回退逻辑。
 
 ### Design Decisions
 
@@ -241,31 +240,37 @@ Write-Output 'Static checks passed'
 - 决策：整个页面只有一个 `index.html`，CSS 与 JS 全部内嵌。
 - 原因：静态宣传页无动态数据、无表单提交、无用户认证，框架会引入不必要复杂度。
 - 约束：后续功能变更均编辑同一文件；新增文件需有明确理由。
-- 路径/验证：`index.html` 全文件；无外部 CSS/JS 依赖。
+- 路径/测试：`index.html` 全文件；无外部 CSS/JS 依赖。
 
 #### Liquid Glass 视觉约束
-- 决策：暖象牙纸色（`#f4f0e8`）+ 近黑石板色（`#2b2b28`）+ 陶土橙强调（`#bd5b3e`）为基础设计语言；导航控件层采用 Apple Liquid Glass 液态玻璃材质（2025-08 视觉改版授权）。
-- 原因：与 TailorFit "训练留一份清楚计划"理念一致，克制专业；玻璃材质只赋予导航控件，内容层保持干净底色。
-- 约束：`box-shadow` / 渐变（`linear-gradient`、`radial-gradient`）仅允许用于 `.glass` 材质层与实色玻璃按钮（inset 高光、Fresnel 内圈、双层投射阴影），禁止用于内容卡片、正文与标签；玻璃控件必须带 `.glass` 类以参与 WebGL 折射层绘制。
-- 路径/验证：`index.html` 中 `--glass-*` 变量、`.glass` 规则区与静态检查脚本。
+- 决策：暖象牙纸色（`#f4f0e8`）+ 近黑石板色（`#2b2b28`）+ 陶土橙强调（`#bd5b3e`）为基础设计语言；导航控件层采用 Liquid Glass 液态玻璃材质。
+- 原因：与 TailorFit “训练留一份清楚计划”理念一致，克制专业；玻璃材质只赋予导航控件，内容层保持干净底色。
+- 约束：`box-shadow` / 渐变仅允许用于 `.glass` 材质层与实色玻璃按钮；玻璃控件必须带 `.glass` 类才会参与 WebGL 折射层绘制。
+- 路径/测试：`index.html` 中 `--glass-*` 变量、`.glass` 规则区与静态检查脚本。
+
+#### WebGL 折射作为渐进增强
+- 决策：整页 SVG foreignObject 快照一次性构建为 WebGL 纹理，滚动只做采样坐标偏移；CSS 多层玻璃始终作为基础材质。
+- 原因：避免每帧截屏成本，同时在没有 WebGL 或快照失败时保持完整可用的玻璃外观。
+- 约束：快照在 `fonts.ready` / `load` / `resize` 时重建；快照内容校验失败两次后 `teardown()`；新增玻璃控件需确认参与 `querySelectorAll('.glass')`。
+- 路径/测试：`index.html` 中 `LiquidGlass` 脚本（`buildSnapshot` / `failOnce` / `teardown`）。
 
 #### IntersectionObserver 渐进增强
 - 决策：使用 `IntersectionObserver` 实现滚动入场动画，无 JS 时所有内容可见。
 - 原因：渐进增强保证内容不依赖 JS 渲染；低性能设备有回退。
-- 约束：阈值固定为 `0.12`；`prefers-reduced-motion: reduce` 时跳过动画。
-- 路径/验证：`index.html` `<script>` 区块（约第 588 行）。
+- 约束：阈值固定为 `0.12`；`prefers-reduced-motion: reduce` 时跳过动画并直接显示。
+- 路径/测试：`index.html` 中 `.reveal` 与 `IntersectionObserver` 脚本。
 
 #### JS class 渐进增强检测
 - 决策：首行内嵌脚本添加 `.js` class 到 `<html>`，CSS 据此控制增强行为。
 - 原因：无 JS 时隐藏元素不依赖 JS 显示，避免 FOUC；有 JS 时通过 class 切换可见性。
 - 约束：`<script>` 必须在 `<style>` 之前执行。
-- 路径/验证：`index.html` 第 9 行 `<script>` 及第 376 行 `.js .reveal` CSS 规则。
+- 路径/测试：`index.html` 第 9 行 `<script>` 及 `.js .reveal` CSS 规则。
 
 #### 年份自动更新
 - 决策：使用 `data-current-year` 属性 + JS 替换文本，避免每年手动改 footer。
 - 原因：footer 中的 © 年份需跨年自动更新，减少维护遗漏。
 - 约束：仅适用于纯展示年份，不可用于业务逻辑判断。
-- 路径/验证：`index.html` 中 `[data-current-year]` 选择器及对应 JS。
+- 路径/测试：`index.html` 中 `[data-current-year]` 选择器及对应 JS。
 
 ## 五、AI 交接（回复中使用）
 
