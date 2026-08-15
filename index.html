@@ -547,10 +547,12 @@
 
     @media (max-width: 767px) {
       .shell { width: min(calc(100% - 32px), var(--max-width)); }
-      .header-inner { min-height: 64px; }
-      .brand-note, .nav a:not(.nav-cta) { display: none; }
-      .nav { gap: 8px; }
-      .nav-cta { padding: 9px 11px; font-size: 12px; }
+      .header-inner { min-height: 60px; }
+      .brand-note { display: none; }
+      .brand-mark { font-size: 18px; }
+      .nav { gap: 5px; }
+      .nav a { padding: 8px 9px; font-size: 11px; }
+      .nav a.nav-cta { padding: 9px 10px; }
       .hero { padding: 64px 0 72px; }
       .hero-grid, .intro-grid, .safety-grid, .audience-grid, .cta-grid { grid-template-columns: 1fr; gap: 40px; }
       h1 { max-width: 100%; margin-bottom: 22px; font-size: clamp(36px, 10.5vw, 42px); }
