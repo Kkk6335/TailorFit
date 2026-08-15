@@ -470,9 +470,11 @@
     .section-heading p {
       max-width: 300px;
       margin-bottom: 4px;
-      color: #c2c0b9;
+      color: var(--muted);
       font-size: 14px;
     }
+
+    .dark-band .section-heading p { color: #c2c0b9; }
 
     .feature-grid {
       display: grid;
@@ -554,7 +556,7 @@
       .hero-copy { max-width: 100%; font-size: 14px; }
       .hero-actions { margin-top: 26px; }
       .button { width: 100%; }
-      .qr-card { grid-template-columns: 1fr; gap: 18px; width: 100%; max-width: 320px; justify-self: center; }
+      .qr-card { grid-template-columns: 1fr; gap: 18px; width: 100%; max-width: 320px; margin: 0 auto; }
       .qr-frame { width: 220px; }
       .intro, .flow, .audience { padding: 72px 0 78px; }
       .intro-text { font-size: 17px; }
@@ -1102,6 +1104,8 @@
         if (!elements.length) return;
         lastTones = elements.map(function () { return null; });
         elements.forEach(bindPress);
+        /* 实色 CTA 按钮（无 .glass）不参与折射绘制，但同样需要按压反馈 */
+        document.querySelectorAll('.button:not(.glass)').forEach(bindPress);
         window.addEventListener('scroll', onScroll, { passive: true });
         window.addEventListener('resize', onResize);
         refreshTone(true);
